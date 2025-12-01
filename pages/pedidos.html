@@ -1,0 +1,69 @@
+<div class="page-container">
+    <div class="page-header">
+        <h2>Gerenciamento de Pedidos</h2>
+        <button id="add-pedido-btn" class="btn-primary">Adicionar Pedido</button>
+    </div>
+
+    <div class="table-container">
+        <table id="pedidos-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Cliente</th>
+                    <th>Data de Criação</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Linhas da tabela serão inseridas aqui -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal para Adicionar/Editar Pedido -->
+<div id="pedido-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modal-title">Adicionar Pedido</h3>
+            <span class="close-button">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="pedido-form">
+                <input type="hidden" id="pedido-id">
+                
+                <div class="form-group">
+                    <label for="pedido-cliente">Cliente</label>
+                    <select id="pedido-cliente" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="pedido-endereco">Endereço de Entrega</label>
+                    <select id="pedido-endereco" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="pedido-data">Data de Criação</label>
+                    <input type="date" id="pedido-data" required>
+                </div>
+                <div class="form-group">
+                    <label for="pedido-status">Status</label>
+                    <select id="pedido-status" required disabled>
+                        <option value="0">Pendente</option>
+                        <option value="1">Em Rota</option>
+                        <option value="2">Entregue</option>
+                        <option value="3">Cancelado</option>
+                    </select>
+                </div>
+                
+                <!-- Simplificação: não vamos gerenciar itens do pedido por esta UI por enquanto -->
+                <p style="font-size: 0.9em; color: #666;">Os itens do pedido poderão ser gerenciados em uma futura tela de detalhes.</p>
+
+                <div id="form-error" class="error-message"></div>
+                <div class="modal-footer">
+                    <button type="button" id="cancel-btn" class="btn-secondary">Cancelar</button>
+                    <button type="submit" id="save-btn" class="btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

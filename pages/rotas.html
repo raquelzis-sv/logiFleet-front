@@ -1,0 +1,90 @@
+<div class="page-container" id="rotas-page-container">
+
+    <!-- VISÃO DE LISTA (Padrão) -->
+    <div id="view-list-rotas">
+        <div class="page-header">
+            <h2>Gerenciamento de Rotas</h2>
+            <button id="add-rota-btn" class="btn-primary">Planejar Nova Rota</button>
+        </div>
+        <div class="table-container">
+            <table id="rotas-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Data</th>
+                        <th>Veículo</th>
+                        <th>Motorista</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Linhas da tabela serão inseridas aqui -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- VISÃO DE CRIAÇÃO (Oculta por padrão) -->
+    <div id="view-create-rota" style="display: none;">
+        <div class="page-header">
+            <h2>Planejar Nova Rota</h2>
+            <button id="cancel-creation-btn" class="btn-secondary">Cancelar</button>
+        </div>
+        
+        <form id="create-rota-form">
+            <div class="form-grid">
+                <!-- Seletor de Veículo -->
+                <div class="form-group">
+                    <label for="select-veiculo">1. Selecione um Veículo Disponível</label>
+                    <select id="select-veiculo" required></select>
+                </div>
+                <!-- Seletor de Motorista -->
+                <div class="form-group">
+                    <label for="select-motorista">2. Selecione um Motorista</label>
+                    <select id="select-motorista" required></select>
+                </div>
+            </div>
+
+            <!-- Tabela de Pedidos Pendentes -->
+            <h4>3. Selecione os Pedidos para a Rota</h4>
+            <div id="form-error" class="error-message"></div>
+            <div class="table-container">
+                <table id="pedidos-pendentes-table">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="select-all-pedidos"></th>
+                            <th>ID</th>
+                            <th>Cliente</th>
+                            <th>Endereço</th>
+                            <th>Peso (kg)</th>
+                            <th>Volume (m³)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Linhas da tabela serão inseridas aqui -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" id="save-rota-btn" class="btn-primary">Salvar Rota</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- VISÃO DE DETALHES (Oculta por padrão) -->
+    <div id="view-details-rota" style="display: none;">
+        <!-- O conteúdo dos detalhes será renderizado aqui -->
+    </div>
+
+</div>
+
+<style>
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+</style>

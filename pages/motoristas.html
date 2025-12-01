@@ -1,0 +1,79 @@
+<div class="page-container">
+    <div class="page-header">
+        <h2>Gerenciamento de Motoristas</h2>
+        <button id="add-motorista-btn" class="btn-primary">Adicionar Motorista</button>
+    </div>
+
+    <div class="table-container">
+        <table id="motoristas-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>CNH</th>
+                    <th>Telefone</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Linhas da tabela serão inseridas aqui -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal para Adicionar/Editar Motorista -->
+<div id="motorista-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modal-title">Adicionar Motorista</h3>
+            <span class="close-button">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="motorista-form">
+                <input type="hidden" id="motorista-id">
+                
+                <h4>Dados do Motorista</h4>
+                <div class="form-group">
+                    <label for="motorista-nome">Nome Completo</label>
+                    <input type="text" id="motorista-nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="motorista-cpf">CPF</label>
+                    <input type="text" id="motorista-cpf" required>
+                </div>
+                <div class="form-group">
+                    <label for="motorista-cnh">CNH</label>
+                    <input type="text" id="motorista-cnh" required>
+                </div>
+                <div class="form-group">
+                    <label for="motorista-telefone">Telefone</label>
+                    <input type="tel" id="motorista-telefone">
+                </div>
+                <div class="form-group">
+                    <label for="motorista-nascimento">Data de Nascimento</label>
+                    <input type="date" id="motorista-nascimento">
+                </div>
+
+                <hr>
+
+                <h4>Dados de Acesso (Usuário)</h4>
+                <div class="form-group">
+                    <label for="usuario-email">Email</label>
+                    <input type="email" id="usuario-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="usuario-senha">Senha</label>
+                    <input type="password" id="usuario-senha" placeholder="Deixe em branco para não alterar">
+                </div>
+
+                <div id="form-error" class="error-message"></div>
+                <div class="modal-footer">
+                    <button type="button" id="cancel-btn" class="btn-secondary">Cancelar</button>
+                    <button type="submit" id="save-btn" class="btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

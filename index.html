@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LogiFleet</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app-container">
+        <header class="app-header">
+            <button id="menu-toggle" class="menu-toggle">☰</button>
+            <h1 id="app-title">LogiFleet</h1>
+            <div class="user-info">
+                <span id="user-name"></span>
+                <button id="logout-button" class="logout-button">Sair</button>
+            </div>
+        </header>
+        
+        <aside id="sidebar" class="sidebar">
+            <nav id="main-nav">
+                <!-- Links de navegação serão inseridos aqui pelo JavaScript -->
+            </nav>
+        </aside>
+
+        <main id="main-content" class="main-content">
+            <!-- O conteúdo da página será carregado aqui -->
+        </main>
+    </div>
+
+    <!-- Serviços -->
+    <script src="js/services/api.js"></script>
+    <script src="js/services/authService.js"></script>
+    <script src="js/services/clienteService.js"></script>
+    <script src="js/services/motoristaService.js"></script>
+    <script src="js/services/veiculoService.js"></script>
+    <script src="js/services/pedidoService.js"></script>
+    <script src="js/services/rotaService.js"></script>
+    <script src="js/services/enderecoClienteService.js"></script>
+    <script src="js/services/manutencaoService.js"></script>
+    <script src="js/services/roleService.js"></script>
+    <script src="js/services/usuarioService.js"></script>
+    <script src="js/services/logIntegracaoService.js"></script>
+    <script src="js/services/configuracaoService.js"></script>
+
+    <!-- Scripts das Páginas -->
+    <script src="pages/dashboard.js"></script>
+    <script src="pages/clientes.js"></script>
+    <script src="pages/motoristas.js"></script>
+    <script src="pages/veiculos.js"></script>
+    <script src="pages/rotas.js"></script>
+    <script src="pages/pedidos.js"></script>
+    <script src="pages/manutencoes.js"></script>
+    <script src="pages/usuarios.js"></script>
+    <script src="pages/logs.js"></script>
+    <script src="pages/configuracoes.js"></script>
+
+    <!-- Scripts Principais -->
+    <script src="js/router.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

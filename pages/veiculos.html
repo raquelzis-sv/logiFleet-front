@@ -1,0 +1,88 @@
+<div class="page-container">
+    <div class="page-header">
+        <h2>Gerenciamento de Veículos</h2>
+        <button id="add-veiculo-btn" class="btn-primary">Adicionar Veículo</button>
+    </div>
+
+    <div class="table-container">
+        <table id="veiculos-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Placa</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Ano</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Linhas da tabela serão inseridas aqui -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal para Adicionar/Editar Veículo -->
+<div id="veiculo-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modal-title">Adicionar Veículo</h3>
+            <span class="close-button">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="veiculo-form">
+                <input type="hidden" id="veiculo-id">
+                
+                <div class="form-group">
+                    <label for="veiculo-placa">Placa</label>
+                    <input type="text" id="veiculo-placa" required>
+                </div>
+                <div class="form-group">
+                    <label for="veiculo-marca">Marca</label>
+                    <input type="text" id="veiculo-marca" required>
+                </div>
+                <div class="form-group">
+                    <label for="veiculo-modelo">Modelo</label>
+                    <input type="text" id="veiculo-modelo" required>
+                </div>
+                <div class="form-group">
+                    <label for="veiculo-ano">Ano de Fabricação</label>
+                    <input type="number" id="veiculo-ano" required>
+                </div>
+                <div class="form-group">
+                    <label for="veiculo-capacidade">Capacidade de Carga (kg)</label>
+                    <input type="number" id="veiculo-capacidade" required>
+                </div>
+                <div class="form-group">
+                    <label for="veiculo-carroceria">Tipo de Carroceria</label>
+                    <input type="text" id="veiculo-carroceria">
+                </div>
+                <div class="form-group">
+                    <label for="veiculo-status">Status</label>
+                    <select id="veiculo-status" required>
+                        <option value="0">Disponível</option>
+                        <option value="1">Em Rota</option>
+                        <option value="2">Em Manutenção</option>
+                        <option value="3">Inativo</option>
+                    </select>
+                </div>
+                 <div class="form-group">
+                    <label for="veiculo-ultima-manutencao">Data da Última Manutenção</label>
+                    <input type="date" id="veiculo-ultima-manutencao">
+                </div>
+                 <div class="form-group">
+                    <label for="veiculo-proxima-manutencao">Data da Próxima Manutenção</label>
+                    <input type="date" id="veiculo-proxima-manutencao">
+                </div>
+
+                <div id="form-error" class="error-message"></div>
+                <div class="modal-footer">
+                    <button type="button" id="cancel-btn" class="btn-secondary">Cancelar</button>
+                    <button type="submit" id="save-btn" class="btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

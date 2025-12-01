@@ -1,0 +1,61 @@
+<div class="page-container">
+    <div class="page-header">
+        <h2>Gerenciamento de Usuários</h2>
+        <button id="add-usuario-btn" class="btn-primary">Adicionar Usuário</button>
+    </div>
+
+    <div class="table-container">
+        <table id="usuarios-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Perfil (Role)</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Linhas da tabela serão inseridas aqui -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal para Adicionar/Editar Usuário -->
+<div id="usuario-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 id="modal-title">Adicionar Usuário</h3>
+            <span class="close-button">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="usuario-form">
+                <input type="hidden" id="usuario-id">
+                
+                <div class="form-group">
+                    <label for="usuario-nome">Nome</label>
+                    <input type="text" id="usuario-nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="usuario-email">Email</label>
+                    <input type="email" id="usuario-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="usuario-senha">Senha</label>
+                    <input type="password" id="usuario-senha" placeholder="Deixe em branco para não alterar">
+                </div>
+                <div class="form-group">
+                    <label for="usuario-role">Perfil (Role)</label>
+                    <select id="usuario-role" required></select>
+                </div>
+
+                <div id="form-error" class="error-message"></div>
+                <div class="modal-footer">
+                    <button type="button" id="cancel-btn" class="btn-secondary">Cancelar</button>
+                    <button type="submit" id="save-btn" class="btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

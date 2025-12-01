@@ -1,0 +1,452 @@
+:root {
+    --primary-main: #0052CC;
+    --error-main: #FF3936;
+    --success-main: #08B37E;
+    --background-default: #F8F9FA;
+    --background-paper: #FFFFFF;
+    --text-primary: #212529;
+    --divider: #DEE2E6;
+    --border-radius-sm: 8px;
+    --border-radius-md: 12px;
+    --font-family: Roboto, -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    font-family: var(--font-family);
+    background-color: var(--background-default);
+    color: var(--text-primary);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 20px;
+}
+
+.login-box {
+    background-color: var(--background-paper);
+    padding: 40px;
+    border-radius: var(--border-radius-md);
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 24px;
+}
+
+.input-group {
+    margin-bottom: 16px;
+    text-align: left;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--divider);
+    border-radius: var(--border-radius-sm);
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: var(--primary-main);
+    box-shadow: 0 0 0 2px rgba(0, 82, 204, 0.2);
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary-main);
+    color: var(--background-paper);
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-transform: none;
+    margin-top: 16px;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+button:hover {
+    background-color: #0041a3; /* Um pouco mais escuro para hover */
+}
+
+button:disabled {
+    background-color: #a9a9a9;
+    cursor: not-allowed;
+}
+
+.error-message {
+    color: var(--error-main);
+    background-color: rgba(255, 57, 54, 0.1);
+    border: 1px solid var(--error-main);
+    border-radius: var(--border-radius-sm);
+    padding: 12px;
+    margin-top: 16px;
+    display: none; /* Oculto por padrão */
+    font-size: 0.9rem;
+}
+
+/* Redefinições para o corpo da aplicação principal */
+body.app-body {
+    display: block; /* Sobrescreve o display flex do login */
+    height: auto;
+}
+
+#app-container {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    grid-template-rows: 64px 1fr;
+    grid-template-areas:
+        "header header"
+        "sidebar main";
+    height: 100vh;
+    transition: grid-template-columns 0.3s ease-in-out;
+}
+
+#app-container.sidebar-collapsed {
+    grid-template-columns: 0 1fr;
+}
+
+.app-header {
+    grid-area: header;
+    background-color: var(--primary-main);
+    color: var(--background-paper);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    z-index: 1000;
+}
+
+.menu-toggle {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    margin: 0;
+    padding: 0 16px 0 0;
+}
+
+#app-title {
+    font-size: 1.25rem;
+    margin: 0;
+}
+
+.user-info {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+#user-name {
+    margin-right: 16px;
+}
+
+.logout-button {
+    background-color: transparent;
+    border: 1px solid var(--background-paper);
+    color: var(--background-paper);
+    padding: 8px 16px;
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    width: auto;
+    margin: 0;
+}
+
+.logout-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar {
+    grid-area: sidebar;
+    background-color: var(--background-paper);
+    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
+    padding-top: 24px;
+    overflow-y: auto;
+    transition: width 0.3s ease-in-out;
+}
+
+#main-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#main-nav a {
+    display: block;
+    padding: 16px 24px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 500;
+    border-left: 3px solid transparent;
+}
+
+#main-nav a:hover {
+    background-color: var(--background-default);
+}
+
+#main-nav a.active {
+    color: var(--primary-main);
+    border-left-color: var(--primary-main);
+    font-weight: bold;
+}
+
+
+.main-content {
+    grid-area: main;
+    padding: 24px;
+    overflow-y: auto;
+    background-color: var(--background-default);
+}
+
+/* Estilos do Dashboard */
+.dashboard-container h2 {
+    font-size: 1.8rem;
+    font-weight: 500;
+    margin-bottom: 24px;
+}
+
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 24px;
+}
+
+.card {
+    background-color: var(--background-paper);
+    padding: 24px;
+    border-radius: var(--border-radius-md);
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+    text-align: center;
+}
+
+.card h3 {
+    margin: 0 0 12px 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.card .summary-value {
+    margin: 0;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--primary-main);
+}
+
+/* Estilos de Página Genéricos */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.page-header h2 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 500;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 10px 20px;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    text-transform: none;
+    width: auto;
+    margin: 0;
+}
+
+.btn-primary {
+    background-color: var(--primary-main);
+    color: var(--background-paper);
+}
+
+.btn-primary:hover {
+    background-color: #0041a3;
+}
+
+.btn-secondary {
+    background-color: var(--divider);
+    color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+    background-color: #ced4da;
+}
+
+/* Estilos da Tabela */
+.table-container {
+    background-color: var(--background-paper);
+    border-radius: var(--border-radius-md);
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+    overflow: hidden;
+}
+
+#clientes-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#clientes-table th, #clientes-table td {
+    padding: 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--divider);
+}
+
+#clientes-table th {
+    background-color: var(--background-default);
+    font-weight: 600;
+}
+
+#clientes-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+#clientes-table tbody tr:hover {
+    background-color: #f1f3f5;
+}
+
+.action-buttons button {
+    margin-right: 8px;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    width: auto;
+}
+
+.btn-edit {
+    background-color: #ffc107;
+    color: black;
+}
+
+.btn-delete {
+    background-color: var(--error-main);
+    color: white;
+}
+
+
+/* Estilos do Modal */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 2000; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0}
+    to {opacity: 1}
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 10% auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 600px;
+    border-radius: var(--border-radius-md);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+    from {transform: translateY(-50px); opacity: 0}
+    to {transform: translateY(0); opacity: 1}
+}
+
+.modal-header {
+    padding: 16px 24px;
+    background-color: var(--primary-main);
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top-left-radius: var(--border-radius-md);
+    border-top-right-radius: var(--border-radius-md);
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 1.25rem;
+}
+
+.close-button {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #f1f1f1;
+}
+
+.modal-body {
+    padding: 24px;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--divider);
+    border-radius: var(--border-radius-sm);
+    box-sizing: border-box;
+}
+
+.modal-footer {
+    padding: 16px 24px;
+    background-color: var(--background-default);
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-bottom-left-radius: var(--border-radius-md);
+    border-bottom-right-radius: var(--border-radius-md);
+}
+
+.modal-footer button {
+    width: auto;
+    margin: 0;
+}
