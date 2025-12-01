@@ -19,18 +19,29 @@ function initLogsPage() {
             // Ordena do mais recente para o mais antigo
             logs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
+            // ... (código anterior da função loadLogs)
             logs.forEach(log => {
                 const row = document.createElement('tr');
-                const statusClass = log.status === 'Sucesso' ? 'status-concluida' : 'status-falha';
+                const isSuccess = log.status === 'Sucesso';
+                const statusClass = isSuccess ? 'status-concluida' : 'status-falha';
+                // Define o ícone com base no status
+                const statusIcon = isSuccess ? 'check_circle' : 'cancel';
+
                 row.innerHTML = `
-                    <td>${log.id}</td>
-                    <td>${new Date(log.timestamp).toLocaleString()}</td>
-                    <td>${log.tipoIntegracao}</td>
-                    <td><span class="status ${statusClass}">${log.status}</span></td>
-                    <td><pre>${log.detalhes}</pre></td>
-                `;
+                    <td>${log.id}</td>
+                    <td>${new Date(log.timestamp).toLocaleString()}</td>
+                    <td>${log.tipoIntegracao}</td>
+                    <td>
+                        <span class="status ${statusClass}">
+                            <span class="material-icons">${statusIcon}</span> 
+                            ${log.status}
+                        </span>
+                    </td>
+                    <td><pre>${log.detalhes}</pre></td>
+                `;
                 tableBody.appendChild(row);
             });
+            // ... (restante do código)
         } catch (error) {
             console.error('[Logs] Erro ao carregar logs:', error);
             tableBody.innerHTML = `<tr><td colspan="5">Erro ao carregar logs.</td></tr>`;

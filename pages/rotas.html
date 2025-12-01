@@ -1,10 +1,22 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Rotas</title>
+    <link rel="stylesheet" href="../css/rotas.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    </head>
+<body>
+
 <div class="page-container" id="rotas-page-container">
 
-    <!-- VISÃO DE LISTA (Padrão) -->
     <div id="view-list-rotas">
         <div class="page-header">
-            <h2>Gerenciamento de Rotas</h2>
-            <button id="add-rota-btn" class="btn-primary">Planejar Nova Rota</button>
+            <h2><span class="material-icons-outlined">route</span> Gerenciamento de Rotas</h2>
+            <button id="add-rota-btn" class="btn-primary">
+                <span class="material-icons-outlined">add</span> Planejar Nova Rota
+            </button>
         </div>
         <div class="table-container">
             <table id="rotas-table">
@@ -19,37 +31,34 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Linhas da tabela serão inseridas aqui -->
-                </tbody>
+                    </tbody>
             </table>
         </div>
     </div>
 
-    <!-- VISÃO DE CRIAÇÃO (Oculta por padrão) -->
     <div id="view-create-rota" style="display: none;">
         <div class="page-header">
-            <h2>Planejar Nova Rota</h2>
-            <button id="cancel-creation-btn" class="btn-secondary">Cancelar</button>
+            <h2><span class="material-icons-outlined">drive_eta</span> Planejar Nova Rota</h2>
+            <button id="cancel-creation-btn" class="btn-secondary">
+                <span class="material-icons-outlined">close</span> Cancelar
+            </button>
         </div>
         
-        <form id="create-rota-form">
+        <form id="create-rota-form" class="form-card">
             <div class="form-grid">
-                <!-- Seletor de Veículo -->
                 <div class="form-group">
                     <label for="select-veiculo">1. Selecione um Veículo Disponível</label>
                     <select id="select-veiculo" required></select>
                 </div>
-                <!-- Seletor de Motorista -->
                 <div class="form-group">
                     <label for="select-motorista">2. Selecione um Motorista</label>
                     <select id="select-motorista" required></select>
                 </div>
             </div>
 
-            <!-- Tabela de Pedidos Pendentes -->
             <h4>3. Selecione os Pedidos para a Rota</h4>
             <div id="form-error" class="error-message"></div>
-            <div class="table-container">
+            <div class="table-container table-selection">
                 <table id="pedidos-pendentes-table">
                     <thead>
                         <tr>
@@ -62,29 +71,23 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- Linhas da tabela serão inseridas aqui -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
 
             <div class="modal-footer">
-                <button type="submit" id="save-rota-btn" class="btn-primary">Salvar Rota</button>
+                <button type="submit" id="save-rota-btn" class="btn-primary">
+                    <span class="material-icons-outlined">save</span> Salvar Rota
+                </button>
             </div>
         </form>
     </div>
 
-    <!-- VISÃO DE DETALHES (Oculta por padrão) -->
     <div id="view-details-rota" style="display: none;">
-        <!-- O conteúdo dos detalhes será renderizado aqui -->
-    </div>
+        </div>
 
 </div>
 
-<style>
-    .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 24px;
-        margin-bottom: 24px;
-    }
-</style>
+<script src="rotas.js"></script>
+</body>
+</html>

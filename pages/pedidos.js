@@ -1,3 +1,56 @@
+// --- SIMULAÇÃO DE SERVIÇOS (MOCK DATA) ---
+// Estes objetos são necessários para que a função initPedidosPage execute.
+// Em um ambiente real, eles seriam substituídos por chamadas a uma API (fetch).
+
+const pedidoService = {
+    getPedidos: async () => { 
+        return [
+            {id: 1, clienteId: 10, dataCriacao: new Date().toISOString(), status: 0, cliente: {nomeEmpresa: 'Tech Corp'}}, 
+            {id: 2, clienteId: 11, dataCriacao: new Date().toISOString(), status: 1, cliente: {nomeEmpresa: 'Inovações SA'}}
+        ]; 
+    },
+    getPedidoById: async (id) => { 
+        // Simula a obtenção de dados detalhados para edição
+        return {id: parseInt(id), clienteId: 10, enderecoEntregaId: 100, dataCriacao: '2025-12-01T00:00:00', status: 0}; 
+    },
+    createPedido: async (data) => { 
+        console.log('Criar Pedido:', data); 
+        return {id: Math.floor(Math.random() * 100) + 3, ...data}; 
+    },
+    updatePedido: async (id, data) => { 
+        console.log('Atualizar Pedido:', id, data); 
+    },
+    deletePedido: async (id) => { 
+        console.log('Deletar Pedido:', id); 
+    }
+};
+
+const clienteService = {
+    getClientes: async () => { 
+        return [
+            {id: 10, nomeEmpresa: 'Tech Corp'}, 
+            {id: 11, nomeEmpresa: 'Inovações SA'},
+            {id: 12, nomeEmpresa: 'Logística Total'}
+        ]; 
+    }
+};
+
+const enderecoClienteService = {
+    getEnderecos: async (clienteId) => { 
+        if (clienteId == 10) {
+            return [
+                {id: 100, logradouro: 'Rua Principal', numero: '123', cidade: 'São Paulo'},
+                {id: 101, logradouro: 'Av. Secundária', numero: '45', cidade: 'Rio de Janeiro'}
+            ];
+        }
+        return [
+            {id: 200, logradouro: 'Rua Aleatória', numero: '99', cidade: 'Curitiba'}
+        ]; 
+    }
+};
+
+// --- CÓDIGO JS PRINCIPAL ---
+
 function initPedidosPage() {
     console.log('[Pedidos] initPedidosPage started.');
 
@@ -71,8 +124,8 @@ function initPedidosPage() {
                 enderecoSelect.innerHTML += `<option value="${e.id}">${e.logradouro}, ${e.numero} - ${e.cidade}</option>`;
             });
         } catch (error) {
-             console.error('[Pedidos] Erro ao carregar endereços:', error);
-             enderecoSelect.innerHTML = '<option value="">Erro ao carregar</option>';
+            console.error('[Pedidos] Erro ao carregar endereços:', error);
+            enderecoSelect.innerHTML = '<option value="">Erro ao carregar</option>';
         }
     };
 
@@ -92,8 +145,8 @@ function initPedidosPage() {
                     <td>${new Date(p.dataCriacao).toLocaleDateString()}</td>
                     <td>${statusMap[p.status] || 'Desconhecido'}</td>
                     <td class="action-buttons">
-                        <button class="btn-edit" data-id="${p.id}">Editar</button>
-                        <button class="btn-delete" data-id="${p.id}">Excluir</button>
+                        <button class="btn-edit" data-id="${p.id}"><i class="material-icons" style="font-size: 16px;">edit</i> Editar</button>
+                        <button class="btn-delete" data-id="${p.id}"><i class="material-icons" style="font-size: 16px;">delete</i> Excluir</button>
                     </td>
                 `;
                 tableBody.appendChild(row);
@@ -179,3 +232,6 @@ function initPedidosPage() {
         window.removeEventListener('click', windowClickListener);
     };
 }
+
+// Inicializa a página quando o DOM estiver completamente carregado
+document.addEventListener('DOMContentLoaded', initPedidosPage);

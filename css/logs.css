@@ -1,0 +1,117 @@
+/* Estilos Globais e Layout */
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f7f8;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+.page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Título e Cabeçalho */
+.page-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 10px;
+}
+
+.page-header h2 {
+    font-size: 1.8em;
+    color: #1976d2; /* Cor primária do Material Design */
+    margin: 0;
+    padding-left: 10px;
+}
+
+/* Tabela */
+.table-container {
+    overflow-x: auto;
+}
+
+#logs-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+#logs-table thead th {
+    background-color: #1976d2;
+    color: white;
+    padding: 12px 15px;
+    text-align: left;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#logs-table tbody tr {
+    border-bottom: 1px solid #eee;
+    transition: background-color 0.3s ease;
+}
+
+#logs-table tbody tr:hover {
+    background-color: #e3f2fd; /* Light blue on hover */
+}
+
+#logs-table tbody td {
+    padding: 10px 15px;
+    vertical-align: top;
+    font-size: 0.9em;
+}
+
+/* Estilos para Status */
+.status {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 8px;
+    border-radius: 16px;
+    font-weight: bold;
+    font-size: 0.85em;
+    color: white;
+    text-transform: uppercase;
+}
+
+.status .material-icons {
+    font-size: 16px;
+    margin-right: 4px;
+}
+
+/* Cores de Status */
+.status-concluida {
+    background-color: #4caf50; /* Verde para Sucesso */
+}
+
+.status-falha {
+    background-color: #f44336; /* Vermelho para Falha */
+}
+
+/* Detalhes (Preformatted Text) */
+#logs-table pre {
+    margin: 0;
+    padding: 5px;
+    background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    white-space: pre-wrap; /* Garante quebras de linha */
+    word-break: break-all;
+    max-height: 100px; /* Limita a altura para logs longos */
+    overflow-y: auto;
+    font-size: 0.8em;
+}
+
+/* Estilo para a linha 'Nenhum log' */
+#logs-table td[colspan="5"] {
+    text-align: center !important;
+    padding: 20px;
+    font-style: italic;
+    color: #777;
+}

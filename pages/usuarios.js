@@ -15,14 +15,14 @@ function initUsuariosPage() {
     const usuarioForm = document.getElementById('usuario-form');
     const formError = modal.querySelector('#form-error');
     const modalTitle = modal.querySelector('#modal-title');
-    
+
     // Inputs
     const usuarioIdInput = document.getElementById('usuario-id');
     const nomeInput = document.getElementById('usuario-nome');
     const emailInput = document.getElementById('usuario-email');
     const senhaInput = document.getElementById('usuario-senha');
     const roleSelect = document.getElementById('usuario-role');
-    
+
     let roles = []; // Cache para as roles
 
     const openModal = async (usuario = null) => {
@@ -39,7 +39,7 @@ function initUsuariosPage() {
                 roleSelect.innerHTML = '<option value="">Erro ao carregar</option>';
             }
         }
-        
+
         roleSelect.innerHTML = '<option value="">Selecione um perfil</option>';
         roles.forEach(r => {
             roleSelect.innerHTML += `<option value="${r.id}">${r.nome}</option>`;
@@ -66,6 +66,23 @@ function initUsuariosPage() {
 
     const loadUsuarios = async () => {
         try {
+
+            // Dentro da função loadUsuarios, na iteração forEach:
+            row.innerHTML = `
+                <td>${u.id}</td>
+                <td>${u.nome}</td>
+                <td>${u.email}</td>
+                <td>${u.role?.nome || 'N/A'}</td>
+                <td class="action-buttons">
+                    <button class="btn-edit" data-id="${u.id}">
+                        <span class="material-icons">edit</span>
+                    </button>
+                    <button class="btn-delete" data-id="${u.id}">
+                        <span class="material-icons">delete</span>
+                    </button>
+                </td>
+            `;
+
             const usuarios = await usuarioService.getUsuarios();
             tableBody.innerHTML = '';
             usuarios.forEach(u => {

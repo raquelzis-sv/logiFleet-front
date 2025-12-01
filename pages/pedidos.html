@@ -1,7 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Pedidos</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="../css/pedidos.css"> 
+</head>
+<body>
+
 <div class="page-container">
     <div class="page-header">
-        <h2>Gerenciamento de Pedidos</h2>
-        <button id="add-pedido-btn" class="btn-primary">Adicionar Pedido</button>
+        <h2><i class="material-icons">inventory_2</i> Gerenciamento de Pedidos</h2>
+        <button id="add-pedido-btn" class="btn-primary">
+            <i class="material-icons">add</i> Adicionar Pedido
+        </button>
     </div>
 
     <div class="table-container">
@@ -16,18 +29,16 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- Linhas da tabela serão inseridas aqui -->
-            </tbody>
+                </tbody>
         </table>
     </div>
 </div>
 
-<!-- Modal para Adicionar/Editar Pedido -->
 <div id="pedido-modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
             <h3 id="modal-title">Adicionar Pedido</h3>
-            <span class="close-button">&times;</span>
+            <span class="close-button"><i class="material-icons">close</i></span>
         </div>
         <div class="modal-body">
             <form id="pedido-form">
@@ -55,15 +66,22 @@
                     </select>
                 </div>
                 
-                <!-- Simplificação: não vamos gerenciar itens do pedido por esta UI por enquanto -->
-                <p style="font-size: 0.9em; color: #666;">Os itens do pedido poderão ser gerenciados em uma futura tela de detalhes.</p>
+                <p style="font-size: 0.9em; color: #666; text-align: center; border-top: 1px dashed #ccc; padding-top: 10px;">Os itens do pedido poderão ser gerenciados em uma futura tela de detalhes.</p>
 
                 <div id="form-error" class="error-message"></div>
                 <div class="modal-footer">
-                    <button type="button" id="cancel-btn" class="btn-secondary">Cancelar</button>
-                    <button type="submit" id="save-btn" class="btn-primary">Salvar</button>
+                    <button type="button" id="cancel-btn" class="btn-secondary">
+                        <i class="material-icons">cancel</i> Cancelar
+                    </button>
+                    <button type="submit" id="save-btn" class="btn-primary">
+                        <i class="material-icons">save</i> Salvar
+                    </button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<script src="pedidos.js"></script> 
+</body>
+</html>

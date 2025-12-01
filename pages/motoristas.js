@@ -1,3 +1,6 @@
+// Assumindo que o 'motoristaService' é definido em outro arquivo
+// e fornece os métodos: getMotoristas, getMotoristaById, createMotorista, updateMotorista, deleteMotorista.
+
 function initMotoristasPage() {
     console.log('[Motoristas] initMotoristasPage started.');
 
@@ -55,10 +58,12 @@ function initMotoristasPage() {
 
     const loadMotoristas = async () => {
         try {
-            const motoristas = await motoristaService.getMotoristas();
+            // OBS: 'motoristaService' deve estar definido globalmente ou importado.
+            const motoristas = await motoristaService.getMotoristas(); 
             tableBody.innerHTML = '';
             motoristas.forEach(m => {
                 const row = document.createElement('tr');
+                // --- MODIFICAÇÃO PARA INCLUIR OS ÍCONES MATERIAL ICONS ---
                 row.innerHTML = `
                     <td>${m.id}</td>
                     <td>${m.nome}</td>
@@ -66,10 +71,15 @@ function initMotoristasPage() {
                     <td>${m.cnh}</td>
                     <td>${m.telefone || 'N/A'}</td>
                     <td class="action-buttons">
-                        <button class="btn-edit" data-id="${m.id}">Editar</button>
-                        <button class="btn-delete" data-id="${m.id}">Excluir</button>
+                        <button class="btn-edit" data-id="${m.id}">
+                            <i class="material-icons">edit</i> Editar
+                        </button>
+                        <button class="btn-delete" data-id="${m.id}">
+                            <i class="material-icons">delete</i> Excluir
+                        </button>
                     </td>
                 `;
+                // -----------------------------------------------------------
                 tableBody.appendChild(row);
             });
         } catch (error) {
@@ -78,6 +88,7 @@ function initMotoristasPage() {
         }
     };
 
+    // Event Listeners
     addBtn.addEventListener('click', () => openModal());
     closeButton.addEventListener('click', closeModal);
     cancelBtn.addEventListener('click', closeModal);
@@ -130,7 +141,7 @@ function initMotoristasPage() {
         const id = event.target.getAttribute('data-id');
         if (!id) return;
 
-        if (event.target.classList.contains('btn-edit')) {
+        if (event.target.closest('.btn-edit')) {
             try {
                 const motorista = await motoristaService.getMotoristaById(id);
                 openModal(motorista);
@@ -139,7 +150,7 @@ function initMotoristasPage() {
             }
         }
 
-        if (event.target.classList.contains('btn-delete')) {
+        if (event.target.closest('.btn-delete')) {
             if (confirm('Tem certeza que deseja excluir este motorista? A exclusão também removerá o usuário de acesso associado.')) {
                 try {
                     await motoristaService.deleteMotorista(id);

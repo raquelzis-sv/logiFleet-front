@@ -1,0 +1,311 @@
+/* Importação da fonte Roboto para consistência com Material Design */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300,400,500,700&display=swap');
+
+:root {
+    --primary-color: #007bff; /* Azul primário */
+    --secondary-color: #6c757d; /* Cinza secundário */
+    --success-color: #28a745; /* Verde para sucesso/concluído */
+    --warning-color: #ffc107; /* Amarelo para em andamento */
+    --danger-color: #dc3545; /* Vermelho para erro/excluir */
+    --bg-color: #f8f9fa; /* Fundo leve */
+    --card-bg: #ffffff; /* Fundo de cartões/modais */
+    --border-color: #dee2e6; /* Cor da borda */
+    --font-color: #343a40; /* Cor do texto principal */
+}
+
+/* Base */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--font-color);
+    line-height: 1.6;
+}
+
+.page-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+}
+
+/* Header */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.page-header h2 {
+    font-weight: 500;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    color: var(--primary-color);
+}
+
+.page-header h2 .material-icons {
+    margin-right: 8px;
+    font-size: 1.2em;
+}
+
+/* Botões */
+.btn-primary, .btn-secondary, .btn-edit, .btn-delete, .btn-finalize {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.3s, opacity 0.3s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover:not([disabled]) {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.btn-secondary:hover:not([disabled]) {
+    background-color: #5a6268;
+}
+
+/* Botões de Ação na Tabela */
+.action-buttons button {
+    margin-left: 5px;
+    padding: 6px 10px;
+    font-size: 0.85em;
+}
+
+.btn-finalize {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.btn-finalize:hover:not([disabled]) {
+    background-color: #1e7e34;
+}
+
+.btn-finalize[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+    background-color: #a4a9ae;
+}
+
+.btn-delete {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.btn-delete:hover:not([disabled]) {
+    background-color: #c82333;
+}
+
+/* Tabela */
+.table-container {
+    overflow-x: auto;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#manutencoes-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#manutencoes-table th, #manutencoes-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+#manutencoes-table th {
+    background-color: var(--primary-color);
+    color: white;
+    font-weight: 500;
+    text-transform: uppercase;
+    font-size: 0.9em;
+}
+
+#manutencoes-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Status Badges */
+.status {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    font-size: 0.85em;
+    text-align: center;
+}
+
+.status-concluida {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.status-andamento {
+    background-color: var(--warning-color);
+    color: var(--font-color);
+}
+
+/* Modals */
+.modal {
+    display: none; /* O JS controla a visibilidade */
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4); /* Fundo escurecido */
+}
+
+.modal-content {
+    background-color: var(--card-bg);
+    margin: 10% auto; /* Centraliza verticalmente */
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px; /* Largura máxima para modais */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--primary-color);
+}
+
+.close-button {
+    color: var(--secondary-color);
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: var(--danger-color);
+    text-decoration: none;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+    margin-top: 15px;
+}
+
+/* Formulário */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.form-group input, 
+.form-group select, 
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    box-sizing: border-box; /* Garante que padding não aumente o tamanho */
+    font-size: 1em;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus, 
+.form-group select:focus, 
+.form-group textarea:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.error-message {
+    color: var(--danger-color);
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+    display: none; /* Escondido por padrão, exibido pelo JS */
+    font-size: 0.9em;
+}
+
+/* Ícones nos botões */
+.btn-primary .material-icons,
+.btn-secondary .material-icons,
+.btn-finalize .material-icons,
+.btn-delete .material-icons {
+    font-size: 1.1em;
+    margin-right: 5px;
+}
+
+/* Responsividade básica */
+@media (max-width: 768px) {
+    .page-container {
+        margin: 10px;
+        padding: 10px;
+    }
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .page-header h2 {
+        margin-bottom: 10px;
+    }
+    #manutencoes-table th, #manutencoes-table td {
+        padding: 8px;
+        font-size: 0.9em;
+    }
+    .action-buttons button {
+        margin-top: 5px;
+    }
+}

@@ -1,61 +1,127 @@
-<div class="page-container">
-    <div class="page-header">
-        <h2>Configurações do Sistema</h2>
-        <button id="add-config-btn" class="btn-primary">Adicionar Configuração</button>
-    </div>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciamento de Configurações</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- Link para o arquivo CSS externo -->
+    <link rel="stylesheet" href="../css/configuracoes.css"> 
+</head>
+<body class="p-4 sm:p-8">
 
-    <div class="table-container">
-        <table id="configuracoes-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome da API</th>
-                    <th>Chave</th>
-                    <th>Valor</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Linhas da tabela serão inseridas aqui -->
-            </tbody>
-        </table>
-    </div>
-</div>
+    <!-- Container Principal com Layout de Cartão -->
+    <div class="max-w-7xl mx-auto bg-white shadow-xl rounded-2xl p-4 sm:p-8 ring-1 ring-gray-100">
 
-<!-- Modal para Adicionar/Editar Configuração -->
-<div id="config-modal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3 id="modal-title">Adicionar Configuração</h3>
-            <span class="close-button">&times;</span>
+        <!-- Cabeçalho da Página -->
+        <div class="flex flex-col sm:flex-row justify-between items-center mb-6 border-b pb-4">
+            <h2 class="text-3xl font-extrabold text-gray-900 flex items-center mb-4 sm:mb-0">
+                <i class="material-icons text-indigo-600 mr-3 text-4xl">settings_applications</i>
+                Configurações do Sistema
+            </h2>
+            <button id="add-config-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-xl shadow-md transition duration-200 flex items-center w-full sm:w-auto justify-center">
+                <i class="material-icons text-xl mr-2">add</i>
+                Adicionar Configuração
+            </button>
         </div>
-        <div class="modal-body">
-            <form id="config-form">
-                <input type="hidden" id="config-id">
-                
-                <div class="form-group">
-                    <label for="config-api-nome">Nome da API</label>
-                    <input type="text" id="config-api-nome" required>
-                </div>
-                <div class="form-group">
-                    <label for="config-endpoint">Endpoint</label>
-                    <input type="text" id="config-endpoint" required>
-                </div>
-                <div class="form-group">
-                    <label for="config-chave">Chave</label>
-                    <input type="text" id="config-chave" required>
-                </div>
-                <div class="form-group">
-                    <label for="config-valor">Valor</label>
-                    <input type="text" id="config-valor" required>
-                </div>
 
-                <div id="form-error" class="error-message"></div>
-                <div class="modal-footer">
-                    <button type="button" id="cancel-btn" class="btn-secondary">Cancelar</button>
-                    <button type="submit" id="save-btn" class="btn-primary">Salvar</button>
-                </div>
-            </form>
+        <!-- Tabela de Configurações -->
+        <div class="overflow-x-auto shadow-lg rounded-xl">
+            <table id="configuracoes-table" class="min-w-full divide-y divide-gray-200">
+                <thead>
+                    <tr>
+                        <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">ID</th>
+                        <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">API</th>
+                        <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Endpoint</th>
+                        <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Chave</th>
+                        <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Valor</th>
+                        <th class="px-6 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider">Ações</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    <!-- Linhas da tabela serão inseridas aqui -->
+                    <tr><td colspan="6" class="p-6 text-center text-gray-500">Carregando configurações...</td></tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Área de Mensagens de Erro/Sucesso (Toast/Snackbar) -->
+        <div id="toast-container"></div>
+    </div>
+
+    <!-- Modal para Adicionar/Editar Configuração -->
+    <div id="config-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header flex justify-between items-center pb-4 border-b">
+                <h3 id="modal-title" class="text-2xl font-bold text-gray-800">Adicionar Configuração</h3>
+                <span class="close-button text-gray-500 hover:text-gray-900 text-3xl cursor-pointer transition duration-150">
+                    <i class="material-icons">close</i>
+                </span>
+            </div>
+            <div class="modal-body pt-4">
+                <form id="config-form">
+                    <!-- O ID será o ID do documento da API (string ou GUID), mas aqui simularemos com um ID em memória -->
+                    <input type="hidden" id="config-id"> 
+                    
+                    <div class="form-group mb-4">
+                        <label for="config-api-nome" class="block text-sm font-medium text-gray-700 mb-1">Nome da API</label>
+                        <input type="text" id="config-api-nome" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150">
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="config-endpoint" class="block text-sm font-medium text-gray-700 mb-1">Endpoint</label>
+                        <input type="text" id="config-endpoint" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150">
+                    </div>
+                    <div class="form-group mb-4">
+                        <label for="config-chave" class="block text-sm font-medium text-gray-700 mb-1">Chave</label>
+                        <input type="text" id="config-chave" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150">
+                    </div>
+                    <div class="form-group mb-6">
+                        <label for="config-valor" class="block text-sm font-medium text-gray-700 mb-1">Valor</label>
+                        <input type="text" id="config-valor" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500 transition duration-150">
+                    </div>
+
+                    <div id="form-error" class="error-message hidden"></div>
+                    <div class="modal-footer flex justify-end gap-3 pt-4 border-t">
+                        <button type="button" id="cancel-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-xl transition duration-150">
+                            Cancelar
+                        </button>
+                        <button type="submit" id="save-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-xl shadow-md transition duration-150">
+                            Salvar
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+    
+    <!-- Modal de Confirmação para Exclusão (Substituindo 'confirm()') -->
+    <div id="delete-confirm-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header flex justify-between items-center pb-4 border-b">
+                <h3 class="text-2xl font-bold text-gray-800">Confirmar Exclusão</h3>
+                <span class="close-button text-gray-500 hover:text-gray-900 text-3xl cursor-pointer transition duration-150" onclick="closeCustomModal('delete-confirm-modal')">
+                    <i class="material-icons">close</i>
+                </span>
+            </div>
+            <div class="modal-body pt-4">
+                <p id="delete-message" class="text-gray-700 mb-6">Tem certeza que deseja excluir esta configuração?</p>
+                <div class="modal-footer flex justify-end gap-3 pt-4 border-t">
+                    <button type="button" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-xl transition duration-150" onclick="closeCustomModal('delete-confirm-modal')">
+                        Cancelar
+                    </button>
+                    <button type="button" id="confirm-delete-btn" class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-xl shadow-md transition duration-150">
+                        Excluir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Link para o arquivo JavaScript externo (no final do body) -->
+    <script src="configuracoes.js"></script>
+</body>
+</html>

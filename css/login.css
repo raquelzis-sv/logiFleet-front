@@ -1,0 +1,130 @@
+/* Estilos Gerais e Corpo */
+body {
+    font-family: 'Roboto', sans-serif; /* A fonte padrão do Material Design */
+    background-color: #f4f7f6;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+/* Container Principal do Dashboard */
+.dashboard-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+h2 {
+    color: #2c3e50;
+    font-weight: 500;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+}
+
+h2 .material-icons {
+    margin-right: 10px;
+    font-size: 30px;
+    color: #3498db;
+}
+
+.subtitle {
+    color: #7f8c8d;
+    margin-top: 0;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+/* Seção dos Cards de Resumo */
+.summary-cards {
+    display: flex;
+    gap: 20px; /* Espaçamento entre os cards */
+    flex-wrap: wrap; /* Para quebra de linha em telas menores */
+    justify-content: space-between;
+}
+
+/* Estilo Base do Card */
+.card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    flex-grow: 1; /* Permite que o card cresça */
+    flex-basis: calc(25% - 15px); /* Garante 4 cards por linha em telas grandes (25% - espaço) */
+    min-width: 200px; /* Largura mínima para evitar que fiquem muito pequenos */
+}
+
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilização para Mini Card (Mais Compacta) */
+.mini-card {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.mini-card h3 {
+    font-size: 14px;
+    color: #555;
+    margin: 5px 0 10px 0;
+    font-weight: 400;
+}
+
+/* Ícone do Card */
+.card-icon {
+    font-size: 40px;
+    margin-bottom: 5px;
+    padding: 10px;
+    border-radius: 50%; /* Fundo circular para o ícone */
+    color: #ffffff; /* Cor do ícone */
+}
+
+/* Cores específicas para cada ícone */
+.card-icon.vehicle {
+    background-color: #3498db; /* Azul */
+}
+
+.card-icon.route {
+    background-color: #e67e22; /* Laranja */
+}
+
+.card-icon.delivery {
+    background-color: #e74c3c; /* Vermelho/Coral */
+}
+
+.card-icon.maintenance {
+    background-color: #2ecc71; /* Verde */
+}
+
+/* Valor de Destaque */
+.summary-value {
+    font-size: 36px;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 0;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 900px) {
+    .card {
+        flex-basis: calc(50% - 10px); /* 2 cards por linha */
+    }
+}
+
+@media (max-width: 550px) {
+    .summary-cards {
+        flex-direction: column; /* 1 card por linha */
+    }
+
+    .card {
+        min-width: 100%;
+    }
+}
