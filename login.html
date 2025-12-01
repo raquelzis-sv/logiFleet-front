@@ -3,29 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - LogiFleet</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>Tela de Login</title>
+    <!-- Incluindo Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Link para o arquivo de estilos externo -->
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <div class="login-container">
-        <div class="login-box">
-            <h1>Login do Sistema</h1>
-            <form id="login-form">
-                <div class="input-group">
-                    <label for="email">Endereço de E-mail</label>
-                    <input type="email" id="email" name="email" required autofocus>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- Container Principal do Formulário -->
+    <div class="w-full max-w-md bg-white p-8 shadow-2xl rounded-xl border border-gray-100 transform hover:scale-[1.02] transition duration-300">
+
+        <!-- Título -->
+        <h2 class="text-3xl font-extrabold text-gray-900 text-center mb-8">
+            Acessar Conta
+        </h2>
+
+        <!-- Formulário de Login -->
+        <form id="loginForm" class="space-y-6">
+
+            <!-- Campo de Email/Login -->
+            <div>
+                <label for="email" class="block text-sm font-medium text-gray-700">
+                    E-mail ou Usuário
+                </label>
+                <div class="mt-1">
+                    <input id="email" name="email" type="text" autocomplete="email" required
+                           class="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150"
+                           placeholder="seu.email@exemplo.com">
                 </div>
-                <div class="input-group">
-                    <label for="password">Senha</label>
-                    <input type="password" id="password" name="password" required>
+            </div>
+
+            <!-- Campo de Senha -->
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700">
+                    Senha
+                </label>
+                <div class="mt-1">
+                    <input id="password" name="password" type="password" autocomplete="current-password" required
+                           class="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150"
+                           placeholder="••••••••">
                 </div>
-                <div id="error-message" class="error-message"></div>
-                <button type="submit" id="login-button">Entrar</button>
-            </form>
-        </div>
+            </div>
+
+            <!-- Área de Mensagem (para feedback do JS) -->
+            <div id="messageBox" class="text-center p-3 rounded-lg text-sm hidden" role="alert">
+                <!-- Mensagens de feedback serão inseridas aqui -->
+            </div>
+
+            <!-- Botões de Ação (Lado a Lado com Login à Direita) -->
+            <div class="flex space-x-3 pt-2">
+                <!-- Botão de Login (agora na direita) -->
+                <button type="button" onclick="handleLogin()"
+                        class="w-1/2 flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 transform hover:scale-[1.01]">
+                    Fazer Login
+                </button>
+            </div>
+        </form>
     </div>
-    <script src="js/services/api.js"></script>
-    <script src="js/services/authService.js"></script>
+
+    <!-- Link para o arquivo JavaScript externo -->
     <script src="js/login.js"></script>
+
 </body>
 </html>

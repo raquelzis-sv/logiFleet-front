@@ -1,0 +1,84 @@
+/* ------------------------------------------------ */
+/* Estilos globais e de layout */
+/* ------------------------------------------------ */
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f3f4f6; /* Gray-100 */
+}
+
+.sidebar {
+    transition: transform 0.3s ease-in-out, width 0.3s ease-in-out;
+    width: 280px; /* Largura padrão */
+}
+
+/* Estado de menu escondido para mobile */
+.sidebar-hidden-mobile {
+    transform: translateX(-100%);
+    z-index: 50;
+}
+
+/* Oculta o menu em telas pequenas por padrão */
+@media (max-width: 1023px) {
+    #sidebar:not(.open) {
+        transform: translateX(-100%);
+        position: fixed;
+        height: 100vh;
+        top: 0;
+    }
+    #sidebar.open {
+        transform: translateX(0);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* ------------------------------------------------ */
+/* ESTILOS PARA O MENU COLAPSADO (Desktop) */
+/* ------------------------------------------------ */
+
+/* Layout principal quando o menu está colapsado no desktop */
+.app-container.sidebar-collapsed #sidebar {
+    width: 80px; /* Largura mínima para ícones */
+}
+
+.app-container.sidebar-collapsed #main-content-area {
+    margin-left: 80px; /* Ajusta o margin do conteúdo principal */
+}
+
+/* Esconde o texto da navegação quando colapsado */
+.app-container.sidebar-collapsed .nav-link span:nth-child(2),
+.app-container.sidebar-collapsed #sidebar .sidebar-footer {
+    opacity: 0;
+    transition: opacity 0.3s;
+    display: none; /* Esconde o texto para evitar quebras de linha */
+}
+
+/* Ajusta o título do cabeçalho quando colapsado */
+.app-container.sidebar-collapsed #sidebar h2 {
+    display: none;
+}
+
+/* Centraliza ícones no modo colapsado */
+.app-container.sidebar-collapsed .nav-link {
+    justify-content: center;
+}
+
+/* Garante que o ícone ainda apareça */
+.app-container.sidebar-collapsed .nav-link .material-icons-outlined {
+    margin-right: 0 !important;
+}
+
+/* ------------------------------------------------ */
+/* ESTILOS DE COMPONENTES */
+/* ------------------------------------------------ */
+
+/* Estilo do link de navegação ativo */
+.nav-link.active {
+    background-color: #3b82f6; /* Blue-500 */
+    color: white;
+    font-weight: 600;
+}
+
+.main-content-wrapper {
+    transition: margin-left 0.3s ease-in-out;
+}

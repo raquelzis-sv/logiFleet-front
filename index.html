@@ -3,60 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LogiFleet</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>LogiFleet - Gestão de Frota</title>
+    
+    <!-- 1. Inclui Tailwind CSS para estilização moderna e responsiva -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- 2. Configuração do Tailwind (DEVE FICAR AQUI para funcionar com o CDN) -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': '#1e40af', /* Blue-700 */
+                        'secondary-gray': '#e5e7eb', /* Gray-200 */
+                        'dark-bg': '#1f2937', /* Gray-800 */
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 3. Inclui a fonte Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <!-- 4. Inclui os Material Icons da Google -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
+    
+    <!-- 5. Link para o arquivo CSS customizado -->
+    <link rel="stylesheet" href="styles.css">
+    
 </head>
-<body>
-    <div id="app-container">
-        <header class="app-header">
-            <button id="menu-toggle" class="menu-toggle">☰</button>
-            <h1 id="app-title">LogiFleet</h1>
-            <div class="user-info">
-                <span id="user-name"></span>
-                <button id="logout-button" class="logout-button">Sair</button>
-            </div>
-        </header>
+<body class="min-h-screen">
+
+    <div id="app-container" class="flex flex-col lg:flex-row min-h-screen">
         
-        <aside id="sidebar" class="sidebar">
-            <nav id="main-nav">
+        <!-- Sidebar (Menu Lateral) -->
+        <aside id="sidebar" class="sidebar bg-dark-bg text-white shadow-xl h-full fixed lg:static flex-shrink-0 z-50 sidebar-hidden-mobile">
+            <div class="p-6 h-16 flex items-center justify-between lg:justify-start bg-primary-blue shadow-lg">
+                <h2 id="sidebar-title" class="text-2xl font-bold tracking-wider transition-opacity">LogiFleet</h2>
+                <!-- Botão para fechar o menu no mobile -->
+                <button id="close-menu-toggle" class="lg:hidden text-white p-2 rounded-full hover:bg-white/10 transition-colors">
+                    <span class="material-icons-outlined">close</span>
+                </button>
+            </div>
+            
+            <!-- main-nav será o container para a UL -->
+            <nav id="main-nav" class="flex flex-col p-4 space-y-2">
                 <!-- Links de navegação serão inseridos aqui pelo JavaScript -->
             </nav>
+            
+            <div class="sidebar-footer p-4 border-t border-gray-700 mt-auto absolute bottom-0 w-full hidden lg:block">
+                <p class="text-sm font-semibold text-gray-400">Versão 1.0.0</p>
+            </div>
         </aside>
 
-        <main id="main-content" class="main-content">
-            <!-- O conteúdo da página será carregado aqui -->
-        </main>
+        <!-- Conteúdo Principal e Cabeçalho -->
+        <div id="main-content-area" class="flex-grow main-content-wrapper flex flex-col">
+            
+            <!-- Header (Cabeçalho) -->
+            <header class="app-header bg-white shadow-md p-4 flex items-center justify-between sticky top-0 z-40">
+                
+                <div class="flex items-center space-x-4">
+                    <!-- Botão para abrir/colapsar o menu -->
+                    <button id="menu-toggle" class="text-gray-700 p-2 rounded-lg hover:bg-secondary-gray transition-colors">
+                        <span class="material-icons-outlined">menu</span>
+                    </button>
+                    <!-- Título da Página Atual -->
+                    <h1 id="page-title" class="text-xl font-semibold text-gray-800 hidden sm:block">Dashboard</h1>
+                </div>
+                
+                <div class="user-info flex items-center space-x-4">
+                    <!-- Nome do usuário inserido pelo JS -->
+                    <span id="user-name" class="font-medium text-gray-700 hidden sm:inline-block"></span>
+                    
+                    <button id="logout-button" 
+                            class="logout-button flex items-center space-x-1 
+                                   bg-primary-blue hover:bg-blue-800 text-white 
+                                   font-semibold py-2 px-4 rounded-lg shadow transition-colors">
+                        <span class="material-icons-outlined text-base">logout</span>
+                        <span>Sair</span>
+                    </button>
+                </div>
+            </header>
+            
+            <!-- Main Content Area -->
+            <main id="main-content" class="main-content p-6 flex-grow">
+                <!-- O conteúdo das páginas será injetado ou roteado aqui -->
+                <section id="content-dashboard" class="page-content space-y-6">
+                    <h2 class="text-3xl font-extrabold text-gray-800 border-b pb-2 mb-4">Dashboard</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Cartões de Estatística (Exemplo) -->
+                        <div class="bg-white p-6 rounded-xl shadow-lg flex items-center space-x-4 hover:shadow-xl transition-shadow">
+                            <span class="material-icons-outlined text-4xl text-primary-blue">local_shipping</span>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Veículos Ativos</p>
+                                <p class="text-2xl font-bold text-gray-900">124</p>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-lg flex items-center space-x-4 hover:shadow-xl transition-shadow">
+                            <span class="material-icons-outlined text-4xl text-yellow-600">assignment</span>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Pedidos em Andamento</p>
+                                <p class="text-2xl font-bold text-gray-900">42</p>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-lg flex items-center space-x-4 hover:shadow-xl transition-shadow">
+                            <span class="material-icons-outlined text-4xl text-green-600">people_outline</span>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Clientes Ativos</p>
+                                <p class="text-2xl font-bold text-gray-900">850</p>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-xl shadow-lg flex items-center space-x-4 hover:shadow-xl transition-shadow">
+                            <span class="material-icons-outlined text-4xl text-red-600">build</span>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Manutenções Pendentes</p>
+                                <p class="text-2xl font-bold text-gray-900">03</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl shadow-lg mt-6">
+                        <h3 class="text-xl font-semibold mb-4 text-gray-800">Boas-vindas ao LogiFleet!</h3>
+                        <p class="text-gray-600">Seu perfil é: <strong id="current-role"></strong>. O menu lateral foi customizado para o seu nível de acesso.</p>
+                    </div>
+                </section>
+                
+                <!-- Placeholder para outras páginas -->
+                <section id="content-placeholder" class="page-content hidden">
+                    <h2 class="text-3xl font-extrabold text-gray-800 border-b pb-2 mb-4" id="placeholder-title"></h2>
+                    <p class="text-gray-600 bg-white p-6 rounded-xl shadow-lg">
+                        Conteúdo da página de <strong id="placeholder-name"></strong> será carregado aqui.
+                    </p>
+                </section>
+                
+            </main>
+            
+            <footer class="bg-white border-t p-4 text-center text-sm text-gray-500">
+                &copy; 2025 LogiFleet. Todos os direitos reservados.
+            </footer>
+        </div>
+
     </div>
 
-    <!-- Serviços -->
-    <script src="js/services/api.js"></script>
-    <script src="js/services/authService.js"></script>
-    <script src="js/services/clienteService.js"></script>
-    <script src="js/services/motoristaService.js"></script>
-    <script src="js/services/veiculoService.js"></script>
-    <script src="js/services/pedidoService.js"></script>
-    <script src="js/services/rotaService.js"></script>
-    <script src="js/services/enderecoClienteService.js"></script>
-    <script src="js/services/manutencaoService.js"></script>
-    <script src="js/services/roleService.js"></script>
-    <script src="js/services/usuarioService.js"></script>
-    <script src="js/services/logIntegracaoService.js"></script>
-    <script src="js/services/configuracaoService.js"></script>
-
-    <!-- Scripts das Páginas -->
-    <script src="pages/dashboard.js"></script>
-    <script src="pages/clientes.js"></script>
-    <script src="pages/motoristas.js"></script>
-    <script src="pages/veiculos.js"></script>
-    <script src="pages/rotas.js"></script>
-    <script src="pages/pedidos.js"></script>
-    <script src="pages/manutencoes.js"></script>
-    <script src="pages/usuarios.js"></script>
-    <script src="pages/logs.js"></script>
-    <script src="pages/configuracoes.js"></script>
-
-    <!-- Scripts Principais -->
-    <script src="js/router.js"></script>
+    <!-- Link para o script principal -->
     <script src="js/main.js"></script>
 </body>
 </html>
