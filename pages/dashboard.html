@@ -1,40 +1,47 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LogiFleet Dashboard</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="../css/dashboard.css"> 
-</head>
-<body>
-    <div class="dashboard-container">
-        <h2><span class="material-icons">data_usage</span> Dashboard LogiFleet</h2>
-        <p class="subtitle">Bem-vindo ao painel principal do LogiFleet. Use a navegação ao lado para acessar as funcionalidades do sistema.</p>
-        
-        <div class="summary-cards">
-            <div class="card mini-card">
-                <span class="material-icons card-icon vehicle">local_shipping</span>
-                <h3>Veículos Ativos</h3>
-                <p class="summary-value" id="active-vehicles-count">12</p>
-            </div>
-            <div class="card mini-card">
-                <span class="material-icons card-icon route">alt_route</span>
-                <h3>Rotas em Andamento</h3>
-                <p class="summary-value" id="routes-in-progress-count">5</p>
-            </div>
-            <div class="card mini-card">
-                <span class="material-icons card-icon delivery">pending_actions</span>
-                <h3>Entregas Pendentes</h3>
-                <p class="summary-value" id="pending-deliveries-count">23</p>
-            </div>
-            <div class="card mini-card">
-                <span class="material-icons card-icon maintenance">handyman</span>
-                <h3>Manutenções Agendadas</h3>
-                <p class="summary-value" id="scheduled-maintenance-count">2</p>
-            </p>
+<div class="page-header">
+    <h1>Dashboard</h1>
+</div>
+
+<div class="summary-container">
+    <div class="summary-card">
+        <div class="card-icon">
+            <span class="material-icons-outlined">local_shipping</span>
+        </div>
+        <div class="card-content">
+            <h3>Veículos Ativos</h3>
+            <p class="summary-value">124</p>
         </div>
     </div>
-    <script src="dashboard.js"></script>
-</body>
-</html>
+    <div class="summary-card">
+        <div class="card-icon">
+            <span class="material-icons-outlined">assignment</span>
+        </div>
+        <div class="card-content">
+            <h3>Pedidos em Andamento</h3>
+            <p class="summary-value">42</p>
+        </div>
+    </div>
+    <div class="summary-card">
+        <div class="card-icon">
+            <span class="material-icons-outlined">people_outline</span>
+        </div>
+        <div class="card-content">
+            <h3>Clientes Ativos</h3>
+            <p class="summary-value">850</p>
+        </div>
+    </div>
+    <div class="summary-card">
+        <div class="card-icon">
+            <span class="material-icons-outlined">build</span>
+        </div>
+        <div class="card-content">
+            <h3>Manutenções Pendentes</h3>
+            <p class="summary-value">3</p>
+        </div>
+    </div>
+</div>
+
+<div class="welcome-panel">
+    <h2>Boas-vindas ao LogiFleet!</h2>
+    <p>Use o menu lateral para navegar pelas funcionalidades do sistema.</p>
+</div>

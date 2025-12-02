@@ -3,67 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tela de Login</title>
-    <!-- Incluindo Tailwind CSS via CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Link para o arquivo de estilos externo -->
-    <link rel="stylesheet" href="styles.css">
+    <title>LogiFleet - Login</title>
+    <!-- Caminho correto para o CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        /* Estilos específicos para a página de login, para centralizar o conteúdo */
+        html, body {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--cor-fundo);
+        }
+        .login-box {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            background-color: var(--cor-painel);
+            box-shadow: 0 4px 12px var(--cor-sombra);
+            border-radius: var(--raio-borda);
+        }
+        .login-box h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 25px;
+            color: var(--cor-primaria);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--cor-borda);
+            border-radius: var(--raio-borda);
+            box-sizing: border-box; /* Garante que padding não afete a largura total */
+        }
+        #message-box {
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: var(--raio-borda);
+            display: none; /* Oculto por padrão */
+            text-align: center;
+        }
+        #message-box.error {
+            display: block;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body>
 
-    <!-- Container Principal do Formulário -->
-    <div class="w-full max-w-md bg-white p-8 shadow-2xl rounded-xl border border-gray-100 transform hover:scale-[1.02] transition duration-300">
-
-        <!-- Título -->
-        <h2 class="text-3xl font-extrabold text-gray-900 text-center mb-8">
-            Acessar Conta
-        </h2>
-
-        <!-- Formulário de Login -->
-        <form id="loginForm" class="space-y-6">
-
-            <!-- Campo de Email/Login -->
-            <div>
-                <label for="email" class="block text-sm font-medium text-gray-700">
-                    E-mail ou Usuário
-                </label>
-                <div class="mt-1">
-                    <input id="email" name="email" type="text" autocomplete="email" required
-                           class="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150"
-                           placeholder="seu.email@exemplo.com">
-                </div>
+    <div class="login-box">
+        <h1>LogiFleet</h1>
+        
+        <form id="login-form">
+            <div class="form-group">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" name="email" required autocomplete="email">
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" required autocomplete="current-password">
             </div>
 
-            <!-- Campo de Senha -->
-            <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">
-                    Senha
-                </label>
-                <div class="mt-1">
-                    <input id="password" name="password" type="password" autocomplete="current-password" required
-                           class="appearance-none block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150"
-                           placeholder="••••••••">
-                </div>
-            </div>
+            <div id="message-box"></div>
 
-            <!-- Área de Mensagem (para feedback do JS) -->
-            <div id="messageBox" class="text-center p-3 rounded-lg text-sm hidden" role="alert">
-                <!-- Mensagens de feedback serão inseridas aqui -->
-            </div>
-
-            <!-- Botões de Ação (Lado a Lado com Login à Direita) -->
-            <div class="flex space-x-3 pt-2">
-                <!-- Botão de Login (agora na direita) -->
-                <button type="button" onclick="handleLogin()"
-                        class="w-1/2 flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 transform hover:scale-[1.01]">
-                    Fazer Login
-                </button>
-            </div>
+            <button type="submit" id="login-button">Entrar</button>
         </form>
     </div>
 
-    <!-- Link para o arquivo JavaScript externo -->
-    <script src="js/login.js"></script>
+    <!-- Scripts carregados como módulos -->
+    <script src="js/services/api.js" type="module"></script>
+    <script src="js/services/authService.js" type="module"></script>
+    <script src="js/login.js" type="module"></script>
 
 </body>
 </html>

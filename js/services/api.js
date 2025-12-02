@@ -1,7 +1,7 @@
-const API_BASE_URL = 'https://localhost:7188/api';
+export const API_BASE_URL = 'https://localhost:7188/api';
 
 // Funções auxiliares para chamadas de API
-async function fetchWrapper(url, options) {
+export async function fetchWrapper(url, options) {
     const token = localStorage.getItem('authToken');
 
     const headers = {

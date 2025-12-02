@@ -1,6 +1,9 @@
+import { fetchWrapper } from './api.js';
+import { API_BASE_URL } from './api.js';
+
 // Funções relacionadas à autenticação
 
-async function login(email, password) {
+export async function login(email, password) {
     try {
         const data = await fetchWrapper(`${API_BASE_URL}/auth/login`, {
             method: 'POST',
@@ -19,21 +22,21 @@ async function login(email, password) {
     }
 }
 
-function logout() {
+export function logout() {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');
     window.location.href = 'login.html'; // Redireciona para a página de login
 }
 
-function getAuthToken() {
+export function getAuthToken() {
     return localStorage.getItem('authToken');
 }
 
-function getUserData() {
+export function getUserData() {
     const userData = localStorage.getItem('userData');
     return userData ? JSON.parse(userData) : null;
 }
 
-function isAuthenticated() {
+export function isAuthenticated() {
     return !!getAuthToken();
 }

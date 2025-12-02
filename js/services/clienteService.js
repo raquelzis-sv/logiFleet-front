@@ -1,35 +1,32 @@
-// Funções para interagir com a API de Clientes
+import { fetchWrapper } from '../api.js';
+import { API_BASE_URL } from '../api.js';
 
-const clienteService = {
-    async getClientes() {
-        return await fetchWrapper(`${API_BASE_URL}/cliente`, {
-            method: 'GET',
-        });
-    },
+const CLIENTES_BASE_URL = `${API_BASE_URL}/Cliente`;
 
-    async getClienteById(id) {
-        return await fetchWrapper(`${API_BASE_URL}/cliente/${id}`, {
-            method: 'GET',
-        });
-    },
+export async function getAllClientes() {
+    return fetchWrapper(CLIENTES_BASE_URL);
+}
 
-    async createCliente(clienteData) {
-        return await fetchWrapper(`${API_BASE_URL}/cliente`, {
-            method: 'POST',
-            body: JSON.stringify(clienteData),
-        });
-    },
+export async function getClienteById(id) {
+    return fetchWrapper(`${CLIENTES_BASE_URL}/${id}`);
+}
 
-    async updateCliente(id, clienteData) {
-        return await fetchWrapper(`${API_BASE_URL}/cliente/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify(clienteData),
-        });
-    },
+export async function createCliente(cliente) {
+    return fetchWrapper(CLIENTES_BASE_URL, {
+        method: 'POST',
+        body: JSON.stringify(cliente),
+    });
+}
 
-    async deleteCliente(id) {
-        return await fetchWrapper(`${API_BASE_URL}/cliente/${id}`, {
-            method: 'DELETE',
-        });
-    }
-};
+export async function updateCliente(id, cliente) {
+    return fetchWrapper(`${CLIENTES_BASE_URL}/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(cliente),
+    });
+}
+
+export async function deleteCliente(id) {
+    return fetchWrapper(`${CLIENTES_BASE_URL}/${id}`, {
+        method: 'DELETE',
+    });
+}

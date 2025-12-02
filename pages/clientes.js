@@ -1,167 +1,169 @@
-function initClientesPage() {
-    console.log('[Clientes] initClientesPage started.');
+import * as clienteService from '../js/services/clienteService.js';
 
-    const tableBody = document.querySelector('#clientes-table tbody');
-    const modal = document.getElementById('cliente-modal');
-    const addClienteBtn = document.getElementById('add-cliente-btn');
-    
-    // Verificação de elementos essenciais
-    if (!tableBody || !modal || !addClienteBtn) {
-        console.error('[Clientes] Elementos essenciais da página não foram encontrados. Verifique se o HTML em "pages/clientes.html" está correto e se foi carregado.');
-        return;
+// Função para carregar e exibir os clientes
+async function loadClientes() {
+    const tbody = document.querySelector('#clientes-table tbody');
+    tbody.innerHTML = ''; // Limpa a tabela
+
+    try {
+        const clientes = await clienteService.getAllClientes();
+        clientes.forEach(cliente => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${cliente.id}</td>
+                <td>${cliente.nomeEmpresa}</td>
+                <td>${cliente.cnpj}</td>
+                <td>${cliente.inscricaoEstadual || ''}</td>
+                <td>
+                    <button class="btn-edit" data-id="${cliente.id}">Editar</button>
+                    <button class="btn-delete" data-id="${cliente.id}">Excluir</button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+        addEventListeners(); // Adiciona event listeners após carregar os clientes
+    } catch (error) {
+        console.error("Erro ao carregar clientes:", error);
+        // Exibir mensagem de erro na UI, se houver
     }
-    console.log('[Clientes] Elementos essenciais do DOM foram encontrados.');
+}
 
-    const modalTitle = document.getElementById('modal-title');
-    const closeButton = document.querySelector('.close-button');
-    const cancelBtn = document.getElementById('cancel-btn');
-    const clienteForm = document.getElementById('cliente-form');
+// Função para abrir o modal de adicionar/editar
+function openClienteModal(cliente = null) {
+    const modal = document.getElementById('cliente-modal');
+    const form = document.getElementById('cliente-form');
+    const title = document.getElementById('modal-title');
+    const clienteId = document.getElementById('cliente-id');
+    const nomeEmpresa = document.getElementById('nome-empresa');
+    const cnpj = document.getElementById('cnpj');
+    const inscricaoEstadual = document.getElementById('inscricao-estadual');
+    const responsavel = document.getElementById('responsavel');
+    const emailContato = document.getElementById('email-contato');
+    const telefoneContato = document.getElementById('telefone-contato');
     const formError = document.getElementById('form-error');
-    const clienteIdInput = document.getElementById('cliente-id');
-    const nomeEmpresaInput = document.getElementById('nome-empresa');
-    const cnpjInput = document.getElementById('cnpj');
-    const inscricaoEstadualInput = document.getElementById('inscricao-estadual');
-    const responsavelInput = document.getElementById('responsavel');
-    const emailContatoInput = document.getElementById('email-contato');
-    const telefoneContatoInput = document.getElementById('telefone-contato');
 
-    const openModal = (cliente = null) => {
-        console.log('[Clientes] Abrindo modal.', cliente ? 'Modo de edição.' : 'Modo de adição.');
-        formError.style.display = 'none';
-        clienteForm.reset();
-        if (cliente) {
-            modalTitle.textContent = 'Editar Cliente';
-            clienteIdInput.value = cliente.id;
-            nomeEmpresaInput.value = cliente.nomeEmpresa;
-            cnpjInput.value = cliente.cnpj;
-            inscricaoEstadualInput.value = cliente.inscricaoEstadual || '';
-            responsavelInput.value = cliente.responsavel || '';
-            emailContatoInput.value = cliente.emailContato || '';
-            telefoneContatoInput.value = cliente.telefoneContato || '';
+    form.reset();
+    formError.textContent = ''; // Limpa mensagens de erro
+
+    if (cliente) {
+        title.textContent = 'Editar Cliente';
+        clienteId.value = cliente.id;
+        nomeEmpresa.value = cliente.nomeEmpresa;
+        cnpj.value = cliente.cnpj;
+        inscricaoEstadual.value = cliente.inscricaoEstadual || '';
+        responsavel.value = cliente.responsavel;
+        emailContato.value = cliente.emailContato;
+        telefoneContato.value = cliente.telefoneContato;
+    } else {
+        title.textContent = 'Adicionar Cliente';
+        clienteId.value = '';
+    }
+    modal.style.display = 'block';
+}
+
+// Função para fechar o modal
+function closeClienteModal() {
+    document.getElementById('cliente-modal').style.display = 'none';
+}
+
+// Função para lidar com o envio do formulário (Adicionar/Editar)
+async function handleClienteFormSubmit(event) {
+    event.preventDefault();
+
+    const clienteId = document.getElementById('cliente-id').value;
+    const nomeEmpresa = document.getElementById('nome-empresa').value;
+    const cnpj = document.getElementById('cnpj').value;
+    const inscricaoEstadual = document.getElementById('inscricao-estadual').value;
+    const responsavel = document.getElementById('responsavel').value;
+    const emailContato = document.getElementById('email-contato').value;
+    const telefoneContato = document.getElementById('telefone-contato').value;
+    const formError = document.getElementById('form-error');
+
+    const clienteData = {
+        nomeEmpresa,
+        cnpj,
+        inscricaoEstadual: inscricaoEstadual || null,
+        responsavel,
+        emailContato,
+        telefoneContato
+    };
+
+    try {
+        if (clienteId) {
+            // Editar cliente existente
+            await clienteService.updateCliente(parseInt(clienteId), clienteData);
         } else {
-            modalTitle.textContent = 'Adicionar Cliente';
-            clienteIdInput.value = '';
+            // Adicionar novo cliente
+            await clienteService.createCliente(clienteData);
         }
-        modal.style.display = 'block';
-    };
+        closeClienteModal();
+        loadClientes(); // Recarrega a lista de clientes
+    } catch (error) {
+        console.error("Erro ao salvar cliente:", error);
+        formError.textContent = error.data?.message || 'Erro ao salvar o cliente.';
+    }
+}
 
-    const closeModal = () => {
-        console.log('[Clientes] Fechando modal.');
-        modal.style.display = 'none';
-    };
-
-    const loadClientes = async () => {
-        console.log('[Clientes] loadClientes: Buscando lista de clientes...');
+// Função para lidar com a exclusão de um cliente
+async function handleDeleteCliente(event) {
+    const id = parseInt(event.target.dataset.id);
+    if (confirm(`Tem certeza que deseja excluir o cliente ID: ${id}?`)) {
         try {
-            const clientes = await clienteService.getClientes();
-            console.log('[Clientes] loadClientes: Clientes recebidos:', clientes);
-            tableBody.innerHTML = ''; // Limpa a tabela
-            if (clientes.length === 0) {
-                console.log('[Clientes] loadClientes: Nenhum cliente encontrado.');
-                tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center;">Nenhum cliente encontrado.</td></tr>`;
-                return;
-            }
-            clientes.forEach(cliente => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${cliente.id}</td>
-                    <td>${cliente.nomeEmpresa}</td>
-                    <td>${cliente.cnpj}</td>
-                    <td>${cliente.inscricaoEstadual || 'N/A'}</td>
-                    <td class="action-buttons">
-                        <button class="btn-edit" data-id="${cliente.id}">Editar</button>
-                        <button class="btn-delete" data-id="${cliente.id}">Excluir</button>
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
-            console.log('[Clientes] loadClientes: Tabela de clientes renderizada.');
+            await clienteService.deleteCliente(id);
+            loadClientes(); // Recarrega a lista
         } catch (error) {
-            console.error('[Clientes] loadClientes: Erro ao carregar clientes:', error);
-            tableBody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:red;">Erro ao carregar clientes. Verifique o console.</td></tr>`;
+            console.error("Erro ao excluir cliente:", error);
+            alert(error.data?.message || 'Erro ao excluir o cliente.');
         }
-    };
+    }
+}
 
-    console.log('[Clientes] Adicionando event listeners...');
-    addClienteBtn.addEventListener('click', () => openModal());
-    closeButton.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
-    
-    const windowClickListener = (event) => {
-        if (event.target == modal) {
-            closeModal();
-        }
-    };
-    window.addEventListener('click', windowClickListener);
-
-    clienteForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        console.log('[Clientes] Formulário salvo.');
-        formError.style.display = 'none';
-
-        const clienteData = {
-            id: clienteIdInput.value ? parseInt(clienteIdInput.value) : 0,
-            nomeEmpresa: nomeEmpresaInput.value,
-            cnpj: cnpjInput.value,
-            inscricaoEstadual: inscricaoEstadualInput.value,
-            responsavel: responsavelInput.value,
-            emailContato: emailContatoInput.value,
-            telefoneContato: telefoneContatoInput.value,
-        };
-
-        try {
-            if (clienteData.id) {
-                await clienteService.updateCliente(clienteData.id, clienteData);
-            } else {
-                const { id, ...createData } = clienteData;
-                await clienteService.createCliente(createData);
-            }
-            closeModal();
-            loadClientes();
-        } catch (error) {
-            console.error('Erro ao salvar cliente:', error);
-            const errorMessage = error.data?.message || (typeof error.data === 'string' ? error.data : 'Ocorreu um erro ao salvar.');
-            formError.textContent = errorMessage;
-            formError.style.display = 'block';
-        }
-    });
-
-    tableBody.addEventListener('click', async (event) => {
-        console.log('[Clientes] Clique na tabela detectado.');
-        const target = event.target;
-        const id = target.getAttribute('data-id');
-
-        if (!id) return;
-
-        if (target.classList.contains('btn-edit')) {
+// Adiciona os event listeners para os botões da tabela e o modal
+function addEventListeners() {
+    // Botões de edição
+    document.querySelectorAll('.btn-edit').forEach(button => {
+        button.onclick = async (event) => {
+            const id = parseInt(event.target.dataset.id);
             try {
                 const cliente = await clienteService.getClienteById(id);
-                openModal(cliente);
+                openClienteModal(cliente);
             } catch (error) {
-                console.error('Erro ao buscar cliente:', error);
-                alert('Não foi possível carregar os dados do cliente para edição.');
+                console.error("Erro ao carregar cliente para edição:", error);
+                alert(error.data?.message || 'Erro ao carregar cliente para edição.');
             }
-        }
-
-        if (target.classList.contains('btn-delete')) {
-            if (confirm('Tem certeza que deseja excluir este cliente?')) {
-                try {
-                    await clienteService.deleteCliente(id);
-                    loadClientes();
-                } catch (error) {
-                    console.error('Erro ao excluir cliente:', error);
-                    alert('Não foi possível excluir o cliente.');
-                }
-            }
-        }
+        };
     });
 
-    // Carrega os clientes ao inicializar
+    // Botões de exclusão
+    document.querySelectorAll('.btn-delete').forEach(button => {
+        button.onclick = handleDeleteCliente;
+    });
+}
+
+// Função de inicialização da página de clientes, chamada pelo roteador
+export function initClientesPage() {
+    console.log('Inicializando página de clientes...');
     loadClientes();
 
-    // Retorna uma função de limpeza que o roteador pode chamar
+    // Event Listeners para o botão "Adicionar Cliente" e o modal
+    document.getElementById('add-cliente-btn').onclick = () => openClienteModal();
+    document.querySelector('#cliente-modal .close-button').onclick = closeClienteModal;
+    document.getElementById('cancel-btn').onclick = closeClienteModal;
+    document.getElementById('cliente-form').onsubmit = handleClienteFormSubmit;
+
+    // Retorna uma função de limpeza (opcional, mas boa prática para single-page apps)
     return () => {
-        console.log('[Clientes] Destroying page listeners...');
-        window.removeEventListener('click', windowClickListener);
+        console.log('Limpando página de clientes...');
+        // Remove os event listeners para evitar duplicação em navegações futuras
+        document.getElementById('add-cliente-btn').onclick = null;
+        document.querySelector('#cliente-modal .close-button').onclick = null;
+        document.getElementById('cancel-btn').onclick = null;
+        document.getElementById('cliente-form').onsubmit = null;
+        // Os event listeners dos botões de editar/excluir são re-adicionados a cada loadClientes,
+        // então não precisam ser removidos explicitamente aqui se a tabela for limpa.
     };
 }
+
+// Adiciona a função ao objeto window para que o roteador possa encontrá-la
+// (Considerar usar um sistema de módulos mais robusto se o projeto crescer)
+window.initClientesPage = initClientesPage;

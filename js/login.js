@@ -1,107 +1,59 @@
-// URL do endpoint de login
-const LOGIN_URL = "http://localhost:5011/api/Auth/login";
+import * as authService from './services/authService.js';
 
-// Função utilitária para exibir mensagens de feedback
-function showMessage(text, isError = false) {
-    const messageBox = document.getElementById('messageBox');
-    messageBox.innerHTML = text;
-    // Remove classes de cor e ocultação para redefinir o estado
-    messageBox.classList.remove('hidden', 'bg-red-100', 'text-red-800', 'bg-green-100', 'text-green-800');
+document.addEventListener('DOMContentLoaded', () => {
+    const loginForm = document.getElementById('login-form');
+    const messageBox = document.getElementById('message-box');
+    const loginButton = document.getElementById('login-button');
 
-    if (isError) {
-        // Estilo para erro
-        messageBox.classList.add('bg-red-100', 'text-red-800');
-    } else {
-        // Estilo para sucesso/informação
-        messageBox.classList.add('bg-green-100', 'text-green-800');
-    }
-    messageBox.classList.remove('hidden');
-}
-
-// Função que realiza a requisição de login para o backend
-async function handleLogin() {
-    const email = document.getElementById('email').value.trim();
-    const password = document.getElementById('password').value.trim();
-
-    if (!email || !password) {
-        showMessage("Por favor, preencha todos os campos.", true);
+    if (!loginForm) {
+        console.error("Elemento #login-form não encontrado.");
         return;
     }
 
-    // Mensagem de carregamento
-    showMessage("Tentando fazer login...", false); 
-
-    // ATENÇÃO: Mudança para 'username' conforme o seu exemplo CURL
-    const loginData = {
-        username: email, // Usando o valor do campo 'email' do formulário como 'username' para o backend
-        password: password
-    };
-
-    try {
-        const response = await fetch(LOGIN_URL, {
-            method: 'POST',
-            headers: {
-                // Ajustando o header para corresponder ao exemplo CURL
-                'Content-Type': 'application/json' 
-            },
-            body: JSON.stringify(loginData)
-        });
-
-        if (response.ok) {
-            const data = await response.json();
-            // Assumimos que o token de autenticação está no campo 'token' do JSON de resposta
-            const authToken = data.token; 
-            const username = data.username;
-            const iduser = data.iduser;
-
-            if (authToken) {
-                // Salva o token no localStorage
-                localStorage.setItem('authToken', authToken);
-                localStorage.setItem('username', username);
-                localStorage.setItem('iduser', iduser);
-                
-                // Mensagem de sucesso antes do redirecionamento
-                showMessage("Login efetuado com sucesso! Redirecionando para a página principal...", false);
-                console.log("Token de autenticação salvo:", authToken);
-                
-                // CORREÇÃO: Redireciona usando o caminho relativo: sobe um nível (..) e entra em paginaPrincipal/
-                window.location.href = 'index.html';
-
-            } else {
-                showMessage("Sucesso no login, mas o token não foi encontrado na resposta do servidor.", true);
-                console.error("Token não encontrado na resposta:", data);
-            }
+    // Função utilitária para exibir mensagens de feedback
+    function showMessage(text, isError = false) {
+        messageBox.textContent = text;
+        if (isError) {
+            messageBox.className = 'error'; // Adiciona a classe de erro
         } else {
-            // Trata falhas de autenticação (400, 401, 403) ou outros erros do servidor
-            let errorText = `Erro no login: Status ${response.status}.`;
-            try {
-                // Tenta obter uma mensagem de erro mais detalhada do corpo da resposta (se for JSON)
-                const errorData = await response.json();
-                
-                // Tenta exibir a mensagem do servidor ou o status
-                if (errorData.message) {
-                     errorText = `Falha no Login: ${errorData.message}`;
-                } else if (errorData.error) {
-                     errorText = `Falha no Login: ${errorData.error}`;
-                } else if (response.status === 401 || response.status === 403) {
-                     errorText = "Credenciais inválidas. Tente novamente.";
-                }
-                
-            } catch (e) {
-                // Ignora se a resposta não for JSON
-            }
-            showMessage(errorText, true);
-            console.error("Falha na resposta do servidor:", response.status, errorText);
+            messageBox.className = ''; // Remove classes
+            messageBox.style.display = 'block'; // Garante que esteja visível se não for erro
+        }
+    }
+    
+    function hideMessage() {
+        messageBox.textContent = '';
+        messageBox.style.display = 'none';
+        messageBox.className = '';
+    }
+
+    loginForm.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Impede o recarregamento da página
+
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+
+        if (!email || !password) {
+            showMessage("Por favor, preencha todos os campos.", true);
+            return;
         }
 
-    } catch (error) {
-        // Trata erros de rede (CORS, servidor inalcançável, porta errada, etc.)
-        showMessage(`Erro de conexão. Verifique se o backend está ativo e acessível em ${LOGIN_URL}.`, true);
-        console.error("Erro de rede/fetch:", error);
-    }
-}
+        // Desabilita o botão e mostra o carregamento
+        loginButton.disabled = true;
+        loginButton.textContent = 'Entrando...';
+        hideMessage();
 
-// Simula a ação de cadastro
-function handleRegister() {
-    showMessage("Redirecionando para a página de Cadastro...", false);
-}
+        try {
+            await authService.login(email, password);
+            // O redirecionamento é tratado dentro do authService.login() com sucesso.
+            // Se o login falhar, o código abaixo será executado no bloco catch.
+        } catch (error) {
+            showMessage(error.message || 'Erro desconhecido durante o login.', true);
+            console.error("Erro no login:", error);
+        } finally {
+            // Reabilita o botão em caso de falha
+            loginButton.disabled = false;
+            loginButton.textContent = 'Entrar';
+        }
+    });
+});

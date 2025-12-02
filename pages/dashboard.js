@@ -1,23 +1,15 @@
+// Função de inicialização para a página de dashboard
 function initDashboardPage() {
-    console.log('[Dashboard] initDashboardPage started.');
-    // A lógica da página do dashboard vai aqui.
+    console.log("Página do Dashboard inicializada.");
 
-    // Retorna uma função de limpeza vazia por consistência.
+    // Poderíamos ter lógicas aqui no futuro, como buscar dados reais para os cards.
+    
+    // Retorna uma função de "limpeza" que o roteador pode chamar ao sair da página.
+    // Útil para remover event listeners e evitar memory leaks.
     return () => {
-        console.log('[Dashboard] Destroying dashboard page (no-op).');
+        console.log("Limpando a página do Dashboard.");
     };
 }
 
-// async function fetchSummaryData() {
-//     try {
-//         // Exemplo de chamada de API (supondo que esses endpoints existam)
-//         // const vehicleCount = await fetchWrapper(`${API_BASE_URL}/veiculos/count`);
-//         // document.getElementById('active-vehicles-count').textContent = vehicleCount.count;
-        
-//         // const routeCount = await fetchWrapper(`${API_BASE_URL}/rotas/count`);
-//         // document.getElementById('routes-in-progress-count').textContent = routeCount.count;
-
-//     } catch (error) {
-//         console.error("Erro ao buscar dados de resumo do dashboard:", error);
-//     }
-// }
+// Disponibiliza a função globalmente para que o router.js possa encontrá-la
+window.initDashboardPage = initDashboardPage;

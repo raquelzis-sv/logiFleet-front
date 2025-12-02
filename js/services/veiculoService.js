@@ -1,41 +1,47 @@
+import { fetchWrapper, API_BASE_URL } from './api.js';
+
 // Funções para interagir com a API de Veículos
 
-const veiculoService = {
-    async getVeiculos() {
-        return await fetchWrapper(`${API_BASE_URL}/veiculo`, {
-            method: 'GET',
-        });
-    },
+export async function getAll(options = {}) {
+    return await fetchWrapper(`${API_BASE_URL}/veiculo`, {
+        method: 'GET',
+        ...options
+    });
+}
 
-    async getVeiculosDisponiveis() {
-        return await fetchWrapper(`${API_BASE_URL}/veiculo/DisponiveisParaRota`, {
-            method: 'GET',
-        });
-    },
+export async function getVeiculosDisponiveis(options = {}) {
+    return await fetchWrapper(`${API_BASE_URL}/veiculo/DisponiveisParaRota`, {
+        method: 'GET',
+        ...options
+    });
+}
 
-    async getVeiculoById(id) {
-        return await fetchWrapper(`${API_BASE_URL}/veiculo/${id}`, {
-            method: 'GET',
-        });
-    },
+export async function getById(id, options = {}) {
+    return await fetchWrapper(`${API_BASE_URL}/veiculo/${id}`, {
+        method: 'GET',
+        ...options
+    });
+}
 
-    async createVeiculo(veiculoData) {
-        return await fetchWrapper(`${API_BASE_URL}/veiculo`, {
-            method: 'POST',
-            body: JSON.stringify(veiculoData),
-        });
-    },
+export async function create(veiculoData, options = {}) {
+    return await fetchWrapper(`${API_BASE_URL}/veiculo`, {
+        method: 'POST',
+        body: JSON.stringify(veiculoData),
+        ...options
+    });
+}
 
-    async updateVeiculo(id, veiculoData) {
-        return await fetchWrapper(`${API_BASE_URL}/veiculo/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify(veiculoData),
-        });
-    },
+export async function update(id, veiculoData, options = {}) {
+    return await fetchWrapper(`${API_BASE_URL}/veiculo/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(veiculoData),
+        ...options
+    });
+}
 
-    async deleteVeiculo(id) {
-        return await fetchWrapper(`${API_BASE_URL}/veiculo/${id}`, {
-            method: 'DELETE',
-        });
-    }
-};
+export async function remove(id, options = {}) {
+    return await fetchWrapper(`${API_BASE_URL}/veiculo/${id}`, {
+        method: 'DELETE',
+        ...options
+    });
+}
