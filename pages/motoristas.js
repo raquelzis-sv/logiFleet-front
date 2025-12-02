@@ -1,171 +1,162 @@
-// Assumindo que o 'motoristaService' é definido em outro arquivo
-// e fornece os métodos: getMotoristas, getMotoristaById, createMotorista, updateMotorista, deleteMotorista.
+// Importa o serviço de motoristas
+import * as motoristaService from '../js/services/motoristaService.js';
 
 function initMotoristasPage() {
-    console.log('[Motoristas] initMotoristasPage started.');
+    const elements = {
+        tableBody: document.getElementById('motoristas-table-body'),
+        addButton: document.getElementById('add-motorista-button'),
+        modalOverlay: document.getElementById('motorista-modal-overlay'),
+        modalTitle: document.getElementById('modal-title'),
+        closeModalButton: document.getElementById('close-modal-button'),
+        cancelButton: document.getElementById('cancel-button'),
+        motoristaForm: document.getElementById('motorista-form'),
+        motoristaId: document.getElementById('motorista-id'),
+        nome: document.getElementById('nome'),
+        cpf: document.getElementById('cpf'),
+        cnh: document.getElementById('cnh'),
+        telefone: document.getElementById('telefone'),
+        email: document.getElementById('email'),
+        saveButton: document.getElementById('save-button'),
+    };
 
-    const tableBody = document.querySelector('#motoristas-table tbody');
-    const modal = document.getElementById('motorista-modal');
-    const addBtn = document.getElementById('add-motorista-btn');
-
-    if (!tableBody || !modal || !addBtn) {
-        console.error('[Motoristas] Elementos essenciais não encontrados.');
-        return;
+    /** Renderiza os motoristas na tabela */
+    function renderTable(motoristas) {
+        elements.tableBody.innerHTML = '';
+        if (!motoristas || motoristas.length === 0) {
+            elements.tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Nenhum motorista encontrado.</td></tr>';
+            return;
+        }
+        motoristas.forEach(motorista => {
+            const row = document.createElement('tr');
+            row.dataset.id = motorista.id;
+            row.innerHTML = `
+                <td>${motorista.nome || ''}</td>
+                <td>${motorista.cpf || ''}</td>
+                <td>${motorista.cnh || ''}</td>
+                <td>${motorista.telefone || ''}</td>
+                <td>${motorista.email || ''}</td>
+                <td class="action-buttons">
+                    <button class="button warning edit-button" data-id="${motorista.id}">Editar</button>
+                    <button class="button danger delete-button" data-id="${motorista.id}">Excluir</button>
+                </td>
+            `;
+            elements.tableBody.appendChild(row);
+        });
     }
 
-    const closeButton = modal.querySelector('.close-button');
-    const cancelBtn = modal.querySelector('#cancel-btn');
-    const motoristaForm = document.getElementById('motorista-form');
-    const formError = modal.querySelector('#form-error');
-    const modalTitle = modal.querySelector('#modal-title');
-    
-    // Inputs
-    const motoristaIdInput = document.getElementById('motorista-id');
-    const nomeInput = document.getElementById('motorista-nome');
-    const cpfInput = document.getElementById('motorista-cpf');
-    const cnhInput = document.getElementById('motorista-cnh');
-    const telefoneInput = document.getElementById('motorista-telefone');
-    const nascimentoInput = document.getElementById('motorista-nascimento');
-    const emailInput = document.getElementById('usuario-email');
-    const senhaInput = document.getElementById('usuario-senha');
-
-    const openModal = (motorista = null) => {
-        formError.style.display = 'none';
-        motoristaForm.reset();
-        if (motorista) {
-            modalTitle.textContent = 'Editar Motorista';
-            senhaInput.placeholder = "Deixe em branco para não alterar";
-            motoristaIdInput.value = motorista.id;
-            nomeInput.value = motorista.nome;
-            cpfInput.value = motorista.cpf;
-            cnhInput.value = motorista.cnh;
-            telefoneInput.value = motorista.telefone;
-            nascimentoInput.value = motorista.dataNascimento?.split('T')[0]; // Formato YYYY-MM-DD
-            if(motorista.usuario) {
-                emailInput.value = motorista.usuario.email;
-            }
-        } else {
-            modalTitle.textContent = 'Adicionar Motorista';
-            senhaInput.placeholder = "Senha de acesso";
-            motoristaIdInput.value = '';
-        }
-        modal.style.display = 'block';
-    };
-
-    const closeModal = () => {
-        modal.style.display = 'none';
-    };
-
-    const loadMotoristas = async () => {
+    async function loadMotoristas() {
+        elements.tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Carregando...</td></tr>';
         try {
-            // OBS: 'motoristaService' deve estar definido globalmente ou importado.
-            const motoristas = await motoristaService.getMotoristas(); 
-            tableBody.innerHTML = '';
-            motoristas.forEach(m => {
-                const row = document.createElement('tr');
-                // --- MODIFICAÇÃO PARA INCLUIR OS ÍCONES MATERIAL ICONS ---
-                row.innerHTML = `
-                    <td>${m.id}</td>
-                    <td>${m.nome}</td>
-                    <td>${m.cpf}</td>
-                    <td>${m.cnh}</td>
-                    <td>${m.telefone || 'N/A'}</td>
-                    <td class="action-buttons">
-                        <button class="btn-edit" data-id="${m.id}">
-                            <i class="material-icons">edit</i> Editar
-                        </button>
-                        <button class="btn-delete" data-id="${m.id}">
-                            <i class="material-icons">delete</i> Excluir
-                        </button>
-                    </td>
-                `;
-                // -----------------------------------------------------------
-                tableBody.appendChild(row);
-            });
+            const motoristas = await motoristaService.getAll();
+            renderTable(motoristas);
         } catch (error) {
-            console.error('[Motoristas] Erro ao carregar motoristas:', error);
-            tableBody.innerHTML = `<tr><td colspan="6">Erro ao carregar motoristas.</td></tr>`;
+            console.error('Erro ao carregar motoristas:', error);
+            elements.tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Erro ao carregar os dados. Verifique o console (F12).</td></tr>';
         }
-    };
+    }
 
-    // Event Listeners
-    addBtn.addEventListener('click', () => openModal());
-    closeButton.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
+    function showModal(mode = 'add', motorista = null) {
+        elements.motoristaForm.reset();
+        elements.motoristaId.value = '';
 
-    const windowClickListener = (event) => {
-        if (event.target == modal) closeModal();
-    };
-    window.addEventListener('click', windowClickListener);
+        if (mode === 'edit' && motorista) {
+            elements.modalTitle.textContent = 'Editar Motorista';
+            elements.motoristaId.value = motorista.id;
+            elements.nome.value = motorista.nome;
+            elements.cpf.value = motorista.cpf;
+            elements.cnh.value = motorista.cnh;
+            elements.telefone.value = motorista.telefone;
+            elements.email.value = motorista.email;
+        } else {
+            elements.modalTitle.textContent = 'Adicionar Motorista';
+        }
+        elements.modalOverlay.classList.add('visible');
+    }
 
-    motoristaForm.addEventListener('submit', async (event) => {
+    function hideModal() {
+        elements.modalOverlay.classList.remove('visible');
+        elements.motoristaForm.reset();
+        elements.motoristaId.value = '';
+    }
+
+    async function handleFormSubmit(event) {
         event.preventDefault();
-        formError.style.display = 'none';
-
+        const id = parseInt(elements.motoristaId.value, 10);
         const motoristaData = {
-            id: motoristaIdInput.value ? parseInt(motoristaIdInput.value) : 0,
-            nome: nomeInput.value,
-            cpf: cpfInput.value,
-            cnh: cnhInput.value,
-            telefone: telefoneInput.value,
-            dataNascimento: nascimentoInput.value,
-            usuario: {
-                nome: nomeInput.value, // Backend usa o nome do motorista para o usuário
-                email: emailInput.value,
-                senhaHash: senhaInput.value, // Senha em texto plano, backend faz o hash
-            }
+            nome: elements.nome.value,
+            cpf: elements.cpf.value,
+            cnh: elements.cnh.value,
+            telefone: elements.telefone.value,
+            email: elements.email.value,
         };
 
-        // Se a senha estiver vazia na edição, não a envie
-        if (motoristaData.id && !motoristaData.usuario.senhaHash) {
-            delete motoristaData.usuario.senhaHash;
-        }
+        elements.saveButton.textContent = 'Salvando...';
+        elements.saveButton.disabled = true;
 
         try {
-            if (motoristaData.id) {
-                await motoristaService.updateMotorista(motoristaData.id, motoristaData);
+            if (id) {
+                await motoristaService.update(id, motoristaData);
             } else {
-                const { id, ...createData } = motoristaData;
-                await motoristaService.createMotorista(createData);
+                await motoristaService.create(motoristaData);
             }
-            closeModal();
+            hideModal();
             loadMotoristas();
         } catch (error) {
-            const errorMessage = error.data?.message || (typeof error.data === 'string' ? error.data : 'Ocorreu um erro ao salvar.');
-            formError.textContent = errorMessage;
-            formError.style.display = 'block';
+            console.error(`Erro ao salvar motorista:`, error);
+            alert('Não foi possível salvar o motorista. Verifique os dados e tente novamente.');
+        } finally {
+            elements.saveButton.textContent = 'Salvar';
+            elements.saveButton.disabled = false;
         }
-    });
+    }
 
-    tableBody.addEventListener('click', async (event) => {
-        const id = event.target.getAttribute('data-id');
-        if (!id) return;
+    async function handleDelete(id) {
+        if (!confirm('Tem certeza de que deseja excluir este motorista?')) return;
+        
+        try {
+            await motoristaService.remove(id);
+            loadMotoristas();
+        } catch (error) {
+            console.error(`Erro ao excluir motorista:`, error);
+            alert('Não foi possível excluir o motorista.');
+        }
+    }
 
-        if (event.target.closest('.btn-edit')) {
+    async function handleTableClick(event) {
+        const target = event.target;
+        const id = parseInt(target.dataset.id, 10);
+
+        if (target.classList.contains('edit-button')) {
             try {
-                const motorista = await motoristaService.getMotoristaById(id);
-                openModal(motorista);
-            } catch (error) {
-                alert('Não foi possível carregar os dados do motorista.');
-            }
-        }
-
-        if (event.target.closest('.btn-delete')) {
-            if (confirm('Tem certeza que deseja excluir este motorista? A exclusão também removerá o usuário de acesso associado.')) {
-                try {
-                    await motoristaService.deleteMotorista(id);
-                    loadMotoristas();
-                } catch (error) {
-                    alert('Não foi possível excluir o motorista.');
+                const motoristas = await motoristaService.getAll();
+                const motorista = motoristas.find(m => m.id === id);
+                if (motorista) {
+                    showModal('edit', motorista);
                 }
+            } catch (error) {
+                console.error(`Erro ao buscar dados do motorista para edição:`, error);
+                alert("Não foi possível carregar os dados para edição.");
             }
+        } else if (target.classList.contains('delete-button')) {
+            handleDelete(id);
         }
-    });
+    }
+
+    // --- LÓGICA PRINCIPAL E EVENT LISTENERS ---
 
     loadMotoristas();
+    elements.addButton.addEventListener('click', () => showModal('add'));
+    elements.closeModalButton.addEventListener('click', hideModal);
+    elements.cancelButton.addEventListener('click', hideModal);
+    elements.modalOverlay.addEventListener('click', (e) => { if (e.target === elements.modalOverlay) hideModal(); });
+    elements.motoristaForm.addEventListener('submit', handleFormSubmit);
+    elements.tableBody.addEventListener('click', handleTableClick);
 
-    return () => {
-        console.log('[Motoristas] Destroying page...');
-        window.removeEventListener('click', windowClickListener);
+    const destroy = () => {
+        console.log("Limpando listeners da página de motoristas.");
     };
+
+    return destroy;
 }
+
+window.initMotoristasPage = initMotoristasPage;

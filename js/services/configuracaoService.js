@@ -1,35 +1,34 @@
-// Funções para interagir com a API de Configurações do Sistema
+import { fetchWrapper, API_BASE_URL } from './api.js';
 
-const configuracaoService = {
-    async getConfiguracoes() {
-        return await fetchWrapper(`${API_BASE_URL}/configuracaosistema`, {
-            method: 'GET',
-        });
-    },
+const CONFIG_BASE_URL = `${API_BASE_URL}/configuracaosistema`;
 
-    async getConfiguracaoById(id) {
-        return await fetchWrapper(`${API_BASE_URL}/configuracaosistema/${id}`, {
-            method: 'GET',
-        });
-    },
+export async function getAll(options = {}) {
+    return await fetchWrapper(CONFIG_BASE_URL, options);
+}
 
-    async createConfiguracao(configuracaoData) {
-        return await fetchWrapper(`${API_BASE_URL}/configuracaosistema`, {
-            method: 'POST',
-            body: JSON.stringify(configuracaoData),
-        });
-    },
+export async function getById(id, options = {}) {
+    return await fetchWrapper(`${CONFIG_BASE_URL}/${id}`, options);
+}
 
-    async updateConfiguracao(id, configuracaoData) {
-        return await fetchWrapper(`${API_BASE_URL}/configuracaosistema/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify(configuracaoData),
-        });
-    },
+export async function create(configuracaoData, options = {}) {
+    return await fetchWrapper(CONFIG_BASE_URL, {
+        method: 'POST',
+        body: JSON.stringify(configuracaoData),
+        ...options
+    });
+}
 
-    async deleteConfiguracao(id) {
-        return await fetchWrapper(`${API_BASE_URL}/configuracaosistema/${id}`, {
-            method: 'DELETE',
-        });
-    }
-};
+export async function update(id, configuracaoData, options = {}) {
+    return await fetchWrapper(`${CONFIG_BASE_URL}/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(configuracaoData),
+        ...options
+    });
+}
+
+export async function remove(id, options = {}) {
+    return await fetchWrapper(`${CONFIG_BASE_URL}/${id}`, {
+        method: 'DELETE',
+        ...options
+    });
+}

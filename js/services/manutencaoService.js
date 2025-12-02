@@ -1,35 +1,43 @@
-// Funções para interagir com a API de Manutenções
+import { fetchWrapper, API_BASE_URL } from './api.js';
 
-const manutencaoService = {
-    async getManutencoes() {
-        return await fetchWrapper(`${API_BASE_URL}/manutencao`, {
-            method: 'GET',
-        });
-    },
+const MANUTENCAO_BASE_URL = `${API_BASE_URL}/manutencao`;
 
-    async getManutencaoById(id) {
-        return await fetchWrapper(`${API_BASE_URL}/manutencao/${id}`, {
-            method: 'GET',
-        });
-    },
+export async function getAll(options = {}) {
+    return await fetchWrapper(MANUTENCAO_BASE_URL, options);
+}
 
-    async createManutencao(manutencaoData) {
-        return await fetchWrapper(`${API_BASE_URL}/manutencao`, {
-            method: 'POST',
-            body: JSON.stringify(manutencaoData),
-        });
-    },
+export async function getById(id, options = {}) {
+    return await fetchWrapper(`${MANUTENCAO_BASE_URL}/${id}`, options);
+}
 
-    async finalizarManutencao(id, finalizacaoData) {
-        return await fetchWrapper(`${API_BASE_URL}/manutencao/${id}/Finalizar`, {
-            method: 'PUT',
-            body: JSON.stringify(finalizacaoData),
-        });
-    },
+export async function create(manutencaoData, options = {}) {
+    return await fetchWrapper(MANUTENCAO_BASE_URL, {
+        method: 'POST',
+        body: JSON.stringify(manutencaoData),
+        ...options
+    });
+}
 
-    async deleteManutencao(id) {
-        return await fetchWrapper(`${API_BASE_URL}/manutencao/${id}`, {
-            method: 'DELETE',
-        });
-    }
-};
+// A função de update não existia, mas é padrão. Adicionando.
+export async function update(id, manutencaoData, options = {}) {
+    return await fetchWrapper(`${MANUTENCAO_BASE_URL}/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(manutencaoData),
+        ...options
+    });
+}
+
+export async function finalizarManutencao(id, finalizacaoData, options = {}) {
+    return await fetchWrapper(`${MANUTENCAO_BASE_URL}/${id}/Finalizar`, {
+        method: 'PUT',
+        body: JSON.stringify(finalizacaoData),
+        ...options
+    });
+}
+
+export async function remove(id, options = {}) {
+    return await fetchWrapper(`${MANUTENCAO_BASE_URL}/${id}`, {
+        method: 'DELETE',
+        ...options
+    });
+}

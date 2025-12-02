@@ -1,104 +1,70 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciamento de Motoristas</title>
-    
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    <link rel="stylesheet" href="../css/motoristas.css">
-</head>
-<body>
-    
-    <div class="page-container">
-        <div class="page-header">
-            <h2><i class="material-icons">directions_car</i> Gerenciamento de Motoristas</h2>
-            <button id="add-motorista-btn" class="btn-primary">
-                <i class="material-icons">person_add</i> Adicionar Motorista
-            </button>
-        </div>
+<!-- Cabeçalho da Página -->
+<div class="page-header">
+    <h1>Gerenciar Motoristas</h1>
+    <button id="add-motorista-button" class="button">Adicionar Motorista</button>
+</div>
 
-        <div class="table-container">
-            <table id="motoristas-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>CPF</th>
-                        <th>CNH</th>
-                        <th>Telefone</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    </tbody>
-            </table>
-        </div>
-    </div>
+<!-- Container da Tabela -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>CNH</th>
+                <th>Telefone</th>
+                <th>Email</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="motoristas-table-body">
+            <tr>
+                <td colspan="6" style="text-align:center;">Carregando motoristas...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
-    <div id="motorista-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modal-title">Adicionar Motorista</h3>
-                <span class="close-button"><i class="material-icons">close</i></span>
-            </div>
+<!-- Modal para Adicionar/Editar Motorista -->
+<div id="motorista-modal-overlay" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="modal-title">Adicionar Motorista</h2>
+            <button id="close-modal-button" class="close-button">&times;</button>
+        </div>
+        <form id="motorista-form">
             <div class="modal-body">
-                <form id="motorista-form">
-                    <input type="hidden" id="motorista-id">
-                    
-                    <h4><i class="material-icons">assignment_ind</i> Dados do Motorista</h4>
-                    <div class="form-group">
-                        <label for="motorista-nome">Nome Completo</label>
-                        <input type="text" id="motorista-nome" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="motorista-cpf">CPF</label>
-                        <input type="text" id="motorista-cpf" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="motorista-cnh">CNH</label>
-                        <input type="text" id="motorista-cnh" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="motorista-telefone">Telefone</label>
-                        <input type="tel" id="motorista-telefone">
-                    </div>
-                    <div class="form-group">
-                        <label for="motorista-nascimento">Data de Nascimento</label>
-                        <input type="date" id="motorista-nascimento">
-                    </div>
-
-                    <hr>
-
-                    <h4><i class="material-icons">lock</i> Dados de Acesso (Usuário)</h4>
-                    <div class="form-group">
-                        <label for="usuario-email">Email</label>
-                        <input type="email" id="usuario-email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="usuario-senha">Senha</label>
-                        <input type="password" id="usuario-senha" placeholder="Deixe em branco para não alterar">
-                    </div>
-
-                    <div id="form-error" class="error-message"></div>
-                    <div class="modal-footer">
-                        <button type="button" id="cancel-btn" class="btn-secondary">
-                            <i class="material-icons">cancel</i> Cancelar
-                        </button>
-                        <button type="submit" id="save-btn" class="btn-primary">
-                            <i class="material-icons">save</i> Salvar
-                        </button>
-                    </div>
-                </form>
+                <input type="hidden" id="motorista-id">
+                
+                <div class="form-group">
+                    <label for="nome">Nome Completo</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cpf">CPF</label>
+                    <input type="text" id="cpf" name="cpf" required minlength="11" maxlength="11" pattern="\d{11}" title="Digite apenas os 11 números do CPF.">
+                </div>
+                
+                <div class="form-group">
+                    <label for="cnh">CNH</label>
+                    <input type="text" id="cnh" name="cnh" required minlength="11" maxlength="11" pattern="\d{11}" title="Digite apenas os 11 números da CNH.">
+                </div>
+                
+                <div class="form-group">
+                    <label for="telefone">Telefone</label>
+                    <input type="tel" id="telefone" name="telefone">
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email">
+                </div>
             </div>
-        </div>
+            <div class="modal-footer">
+                <button type="button" id="cancel-button" class="button danger">Cancelar</button>
+                <button type="submit" id="save-button" class="button success">Salvar</button>
+            </div>
+        </form>
     </div>
-    
-    <script src="motoristas.js"></script>
-    <script>
-        // Chama a função de inicialização da página após o carregamento
-        document.addEventListener('DOMContentLoaded', initMotoristasPage);
-    </script>
-</body>
-</html>
+</div>

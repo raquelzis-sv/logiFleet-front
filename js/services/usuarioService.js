@@ -1,35 +1,35 @@
-// Funções para interagir com a API de Usuários
+import { fetchWrapper, API_BASE_URL } from './api.js';
 
-const usuarioService = {
-    async getUsuarios() {
-        return await fetchWrapper(`${API_BASE_URL}/usuario`, {
-            method: 'GET',
-        });
-    },
+const USUARIO_BASE_URL = `${API_BASE_URL}/usuario`;
 
-    async getUsuarioById(id) {
-        return await fetchWrapper(`${API_BASE_URL}/usuario/${id}`, {
-            method: 'GET',
-        });
-    },
+export async function getAll(options = {}) {
+    return await fetchWrapper(USUARIO_BASE_URL, options);
+}
 
-    async createUsuario(usuarioData) {
-        return await fetchWrapper(`${API_BASE_URL}/usuario`, {
-            method: 'POST',
-            body: JSON.stringify(usuarioData),
-        });
-    },
+export async function getById(id, options = {}) {
+    return await fetchWrapper(`${USUARIO_BASE_URL}/${id}`, options);
+}
 
-    async updateUsuario(id, usuarioData) {
-        return await fetchWrapper(`${API_BASE_URL}/usuario/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify(usuarioData),
-        });
-    },
+export async function create(usuarioData, options = {}) {
+    return await fetchWrapper(USUARIO_BASE_URL, {
+        method: 'POST',
+        body: JSON.stringify(usuarioData),
+        ...options
+    });
+}
 
-    async deleteUsuario(id) {
-        return await fetchWrapper(`${API_BASE_URL}/usuario/${id}`, {
-            method: 'DELETE',
-        });
-    }
-};
+export async function update(id, usuarioData, options = {}) {
+    return await fetchWrapper(`${USUARIO_BASE_URL}/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(usuarioData),
+        ...options
+    });
+}
+
+export async function remove(id, options = {}) {
+    return await fetchWrapper(`${USUARIO_BASE_URL}/${id}`, {
+        method: 'DELETE',
+        ...options
+    });
+}
+

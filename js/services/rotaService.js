@@ -1,43 +1,43 @@
-// Funções para interagir com a API de Rotas
+import { fetchWrapper, API_BASE_URL } from './api.js';
 
-const rotaService = {
-    async getRotas() {
-        return await fetchWrapper(`${API_BASE_URL}/rota`, {
-            method: 'GET',
-        });
-    },
+const ROTAS_BASE_URL = `${API_BASE_URL}/rota`;
 
-    async getRotaById(id) {
-        return await fetchWrapper(`${API_BASE_URL}/rota/${id}`, {
-            method: 'GET',
-        });
-    },
+export async function getAll(options = {}) {
+    return await fetchWrapper(ROTAS_BASE_URL, options);
+}
 
-    async createRota(rotaRequest) {
-        // rotaRequest should be an object like:
-        // { veiculoId: 1, motoristaId: 1, pedidosIds: [1, 2, 3] }
-        return await fetchWrapper(`${API_BASE_URL}/rota`, {
-            method: 'POST',
-            body: JSON.stringify(rotaRequest),
-        });
-    },
+export async function getById(id, options = {}) {
+    return await fetchWrapper(`${ROTAS_BASE_URL}/${id}`, options);
+}
 
-    async updateRota(id, rotaData) {
-        return await fetchWrapper(`${API_BASE_URL}/rota/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify(rotaData),
-        });
-    },
+export async function create(rotaRequest, options = {}) {
+    // rotaRequest should be an object like:
+    // { veiculoId: 1, motoristaId: 1, pedidosIds: [1, 2, 3] }
+    return await fetchWrapper(ROTAS_BASE_URL, {
+        method: 'POST',
+        body: JSON.stringify(rotaRequest),
+        ...options
+    });
+}
 
-    async deleteRota(id) {
-        return await fetchWrapper(`${API_BASE_URL}/rota/${id}`, {
-            method: 'DELETE',
-        });
-    },
+export async function update(id, rotaData, options = {}) {
+    return await fetchWrapper(`${ROTAS_BASE_URL}/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(rotaData),
+        ...options
+    });
+}
 
-    async marcarPedidoComoEntregue(rotaId, pedidoId) {
-        return await fetchWrapper(`${API_BASE_URL}/rota/${rotaId}/pedidos/${pedidoId}/entregar`, {
-            method: 'PUT'
-        });
-    }
-};
+export async function remove(id, options = {}) {
+    return await fetchWrapper(`${ROTAS_BASE_URL}/${id}`, {
+        method: 'DELETE',
+        ...options
+    });
+}
+
+export async function marcarPedidoComoEntregue(rotaId, pedidoId, options = {}) {
+    return await fetchWrapper(`${ROTAS_BASE_URL}/${rotaId}/pedidos/${pedidoId}/entregar`, {
+        method: 'PUT',
+        ...options
+    });
+}

@@ -1,35 +1,34 @@
-// Funções para interagir com a API de Motoristas
+import { fetchWrapper, API_BASE_URL } from './api.js';
 
-const motoristaService = {
-    async getMotoristas() {
-        return await fetchWrapper(`${API_BASE_URL}/motorista`, {
-            method: 'GET',
-        });
-    },
+const MOTORISTAS_BASE_URL = `${API_BASE_URL}/Motorista`;
 
-    async getMotoristaById(id) {
-        return await fetchWrapper(`${API_BASE_URL}/motorista/${id}`, {
-            method: 'GET',
-        });
-    },
+export async function getAll(options = {}) {
+    return fetchWrapper(MOTORISTAS_BASE_URL, options);
+}
 
-    async createMotorista(motoristaData) {
-        return await fetchWrapper(`${API_BASE_URL}/motorista`, {
-            method: 'POST',
-            body: JSON.stringify(motoristaData),
-        });
-    },
+export async function getById(id, options = {}) {
+    return fetchWrapper(`${MOTORISTAS_BASE_URL}/${id}`, options);
+}
 
-    async updateMotorista(id, motoristaData) {
-        return await fetchWrapper(`${API_BASE_URL}/motorista/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify(motoristaData),
-        });
-    },
+export async function create(motorista, options = {}) {
+    return fetchWrapper(MOTORISTAS_BASE_URL, {
+        method: 'POST',
+        body: JSON.stringify(motorista),
+        ...options
+    });
+}
 
-    async deleteMotorista(id) {
-        return await fetchWrapper(`${API_BASE_URL}/motorista/${id}`, {
-            method: 'DELETE',
-        });
-    }
-};
+export async function update(id, motorista, options = {}) {
+    return fetchWrapper(`${MOTORISTAS_BASE_URL}/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(motorista),
+        ...options
+    });
+}
+
+export async function remove(id, options = {}) {
+    return fetchWrapper(`${MOTORISTAS_BASE_URL}/${id}`, {
+        method: 'DELETE',
+        ...options
+    });
+}

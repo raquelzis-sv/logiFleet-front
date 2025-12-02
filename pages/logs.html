@@ -1,38 +1,22 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logs de Integração</title>
-
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-    <link rel="stylesheet" href="../css/logs.css"> 
-</head>
-<body>
-
-    <div class="page-container">
-        <div class="page-header">
-            <span class="material-icons" style="font-size: 32px; color: #1976d2;">assignment</span>
-            <h2>Logs de Integração</h2>
-        </div>
-
-        <div class="table-container">
-            <table id="logs-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Timestamp</th>
-                        <th>Tipo de Integração</th>
-                        <th>Status</th>
-                        <th>Detalhes</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    </tbody>
-            </table>
-        </div>
-    </div>
-
-    <script src="logs.js"></script> </body>
-</html>
+<!-- Cabeçalho da Página -->
+<div class="page-header">
+    <h1>Logs de Integração</h1>
+</div>
+<!-- Tabela -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome da API</th>
+                <th>Endpoint</th>
+                <th>Data e Hora</th>
+            </tr>
+        </thead>
+        <tbody id="logs-table-body">
+            <tr>
+                <td colspan="4" style="text-align:center;">Carregando logs...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

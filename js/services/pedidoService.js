@@ -1,41 +1,38 @@
-// Funções para interagir com a API de Pedidos
+import { fetchWrapper, API_BASE_URL } from './api.js';
 
-const pedidoService = {
-    async getPedidos() {
-        return await fetchWrapper(`${API_BASE_URL}/pedido`, {
-            method: 'GET',
-        });
-    },
+const PEDIDOS_BASE_URL = `${API_BASE_URL}/pedido`;
 
-    async getPedidosPendentes() {
-        return await fetchWrapper(`${API_BASE_URL}/pedido/pendentes`, {
-            method: 'GET',
-        });
-    },
-    
-    async getPedidoById(id) {
-        return await fetchWrapper(`${API_BASE_URL}/pedido/${id}`, {
-            method: 'GET',
-        });
-    },
+export async function getAll(options = {}) {
+    return await fetchWrapper(PEDIDOS_BASE_URL, options);
+}
 
-    async createPedido(pedidoData) {
-        return await fetchWrapper(`${API_BASE_URL}/pedido`, {
-            method: 'POST',
-            body: JSON.stringify(pedidoData),
-        });
-    },
+export async function getPedidosPendentes(options = {}) {
+    return await fetchWrapper(`${PEDIDOS_BASE_URL}/pendentes`, options);
+}
 
-    async updatePedido(id, pedidoData) {
-        return await fetchWrapper(`${API_BASE_URL}/pedido/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify(pedidoData),
-        });
-    },
+export async function getById(id, options = {}) {
+    return await fetchWrapper(`${PEDIDOS_BASE_URL}/${id}`, options);
+}
 
-    async deletePedido(id) {
-        return await fetchWrapper(`${API_BASE_URL}/pedido/${id}`, {
-            method: 'DELETE',
-        });
-    }
-};
+export async function create(pedidoData, options = {}) {
+    return await fetchWrapper(PEDIDOS_BASE_URL, {
+        method: 'POST',
+        body: JSON.stringify(pedidoData),
+        ...options
+    });
+}
+
+export async function update(id, pedidoData, options = {}) {
+    return await fetchWrapper(`${PEDIDOS_BASE_URL}/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(pedidoData),
+        ...options
+    });
+}
+
+export async function remove(id, options = {}) {
+    return await fetchWrapper(`${PEDIDOS_BASE_URL}/${id}`, {
+        method: 'DELETE',
+        ...options
+    });
+}

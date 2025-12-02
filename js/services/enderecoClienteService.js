@@ -1,40 +1,39 @@
-// Funções para interagir com a API de Endereços de Clientes
+import { fetchWrapper, API_BASE_URL } from './api.js';
 
-const enderecoClienteService = {
-    // Retorna endereços, opcionalmente filtrando por clienteId
-    async getEnderecos(clienteId = null) {
-        let url = `${API_BASE_URL}/EnderecoClientes`;
-        if (clienteId) {
-            url += `?clienteId=${clienteId}`;
-        }
-        return await fetchWrapper(url, {
-            method: 'GET',
-        });
-    },
+const ENDERECOS_BASE_URL = `${API_BASE_URL}/EnderecoClientes`;
 
-    async getEnderecoById(id) {
-        return await fetchWrapper(`${API_BASE_URL}/EnderecoClientes/${id}`, {
-            method: 'GET',
-        });
-    },
-
-    async createEndereco(enderecoData) {
-        return await fetchWrapper(`${API_BASE_URL}/EnderecoClientes`, {
-            method: 'POST',
-            body: JSON.stringify(enderecoData),
-        });
-    },
-
-    async updateEndereco(id, enderecoData) {
-        return await fetchWrapper(`${API_BASE_URL}/EnderecoClientes/${id}`, {
-            method: 'PUT',
-            body: JSON.stringify(enderecoData),
-        });
-    },
-
-    async deleteEndereco(id) {
-        return await fetchWrapper(`${API_BASE_URL}/EnderecoClientes/${id}`, {
-            method: 'DELETE',
-        });
+// Retorna endereços, opcionalmente filtrando por clienteId
+export async function getAll(clienteId = null, options = {}) {
+    let url = ENDERECOS_BASE_URL;
+    if (clienteId) {
+        url += `?clienteId=${clienteId}`;
     }
-};
+    return await fetchWrapper(url, options);
+}
+
+export async function getById(id, options = {}) {
+    return await fetchWrapper(`${ENDERECOS_BASE_URL}/${id}`, options);
+}
+
+export async function create(enderecoData, options = {}) {
+    return await fetchWrapper(ENDERECOS_BASE_URL, {
+        method: 'POST',
+        body: JSON.stringify(enderecoData),
+        ...options
+    });
+}
+
+export async function update(id, enderecoData, options = {}) {
+    return await fetchWrapper(`${ENDERECOS_BASE_URL}/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(enderecoData),
+        ...options
+    });
+}
+
+export async function remove(id, options = {}) {
+    return await fetchWrapper(`${ENDERECOS_BASE_URL}/${id}`, {
+        method: 'DELETE',
+        ...options
+    });
+}

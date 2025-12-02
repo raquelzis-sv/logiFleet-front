@@ -2,15 +2,6 @@
 import * as veiculoService from '../js/services/veiculoService.js';
 
 function initVeiculosPage() {
-    // --- FUNÇÃO DE DEBUG NA UI ---
-    const logArea = document.getElementById('debug-log-area');
-    function logToUI(message) {
-        if (!logArea) return;
-        const p = document.createElement('p');
-        p.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
-        logArea.appendChild(p);
-    }
-
     const elements = {
         tableBody: document.getElementById('vehicles-table-body'),
         addButton: document.getElementById('add-vehicle-button'),
@@ -56,31 +47,13 @@ function initVeiculosPage() {
     }
 
     async function loadVehicles() {
-        logToUI("Iniciando busca de veículos...");
         elements.tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Carregando...</td></tr>';
-
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => {
-            logToUI("ERRO: Timeout de 10 segundos atingido! Abortando requisição.");
-            controller.abort();
-        }, 10000);
-
         try {
-            logToUI("Aguardando veiculoService.getAll()...");
-            const veiculos = await veiculoService.getAll({ signal: controller.signal });
-            clearTimeout(timeoutId);
-            logToUI(`Veículos recebidos com sucesso: ${JSON.stringify(veiculos)}`);
+            const veiculos = await veiculoService.getAll();
             renderTable(veiculos);
         } catch (error) {
-            clearTimeout(timeoutId);
-            logToUI(`ERRO no bloco catch: ${error.name} - ${error.message}`);
-            logToUI(`Erro completo: ${JSON.stringify(error)}`);
-            
-            if (error.name === 'AbortError') {
-                elements.tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Erro de Timeout: O servidor demorou muito para responder.</td></tr>';
-            } else {
-                elements.tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Erro ao carregar os dados. Verifique o log de depuração abaixo.</td></tr>';
-            }
+            console.error('Erro ao carregar veículos:', error);
+            elements.tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Erro ao carregar os dados. Verifique o console (F12).</td></tr>';
         }
     }
 
@@ -114,7 +87,7 @@ function initVeiculosPage() {
         const veiculoData = {
             placa: elements.placa.value,
             marca: elements.marca.value,
-            modelo: elements.modelo.value,
+            modelo: document.getElementById('modelo').value,
             ano: parseInt(elements.ano.value, 10),
             capacidade: parseFloat(elements.capacidade.value),
         };
@@ -131,7 +104,7 @@ function initVeiculosPage() {
             hideModal();
             loadVehicles();
         } catch (error) {
-            logToUI(`Erro ao salvar veículo: ${error.message}`);
+            console.error(`Erro ao salvar veículo: ${error.message}`);
             alert('Não foi possível salvar o veículo. Tente novamente.');
         } finally {
             elements.saveButton.textContent = 'Salvar';
@@ -147,7 +120,7 @@ function initVeiculosPage() {
             await veiculoService.remove(id);
             loadVehicles();
         } catch (error) {
-            logToUI(`Erro ao excluir veículo: ${error.message}`);
+            console.error(`Erro ao excluir veículo: ${error.message}`);
             alert('Não foi possível excluir o veículo. Tente novamente.');
         }
     }
@@ -164,7 +137,7 @@ function initVeiculosPage() {
                     showModal('edit', veiculo);
                 }
             } catch (error) {
-                logToUI(`Erro ao buscar dados para edição: ${error.message}`);
+                console.error(`Erro ao buscar dados para edição: ${error.message}`);
                 alert("Não foi possível carregar os dados para edição.");
             }
         } else if (target.classList.contains('delete-button')) {
@@ -183,7 +156,8 @@ function initVeiculosPage() {
     elements.tableBody.addEventListener('click', handleTableClick);
 
     const destroy = () => {
-        logToUI("Limpando listeners da página de veículos.");
+        console.log("Limpando listeners da página de veículos.");
+        // Adicionar a remoção de event listeners se necessário no futuro
     };
 
     return destroy;

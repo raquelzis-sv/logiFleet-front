@@ -1,181 +1,163 @@
+import * as usuarioService from '../js/services/usuarioService.js';
+import * as roleService from '../js/services/roleService.js';
+
 function initUsuariosPage() {
-    console.log('[Usuarios] initUsuariosPage started.');
+    const elements = {
+        tableBody: document.getElementById('usuarios-table-body'),
+        addButton: document.getElementById('add-usuario-button'),
+        modalOverlay: document.getElementById('usuario-modal-overlay'),
+        modalTitle: document.getElementById('modal-title'),
+        closeModalButton: document.getElementById('close-modal-button'),
+        cancelButton: document.getElementById('cancel-button'),
+        usuarioForm: document.getElementById('usuario-form'),
+        usuarioId: document.getElementById('usuario-id'),
+        nome: document.getElementById('nome'),
+        email: document.getElementById('email'),
+        roleId: document.getElementById('roleId'),
+        password: document.getElementById('password'),
+        passwordGroup: document.getElementById('password-group'),
+        saveButton: document.getElementById('save-button'),
+    };
 
-    const tableBody = document.querySelector('#usuarios-table tbody');
-    const modal = document.getElementById('usuario-modal');
-    const addBtn = document.getElementById('add-usuario-btn');
+    let rolesCache = [];
 
-    if (!tableBody || !modal || !addBtn) {
-        console.error('[Usuarios] Elementos essenciais não encontrados.');
-        return;
+    async function populateRolesDropdown() {
+        try {
+            const roles = await roleService.getAll();
+            rolesCache = roles;
+            elements.roleId.innerHTML = '<option value="">Selecione um perfil</option>';
+            roles.forEach(r => {
+                elements.roleId.innerHTML += `<option value="${r.id}">${r.nome}</option>`;
+            });
+        } catch (error) {
+            console.error("Erro ao carregar perfis (roles):", error);
+        }
     }
 
-    const closeButton = modal.querySelector('.close-button');
-    const cancelBtn = modal.querySelector('#cancel-btn');
-    const usuarioForm = document.getElementById('usuario-form');
-    const formError = modal.querySelector('#form-error');
-    const modalTitle = modal.querySelector('#modal-title');
-
-    // Inputs
-    const usuarioIdInput = document.getElementById('usuario-id');
-    const nomeInput = document.getElementById('usuario-nome');
-    const emailInput = document.getElementById('usuario-email');
-    const senhaInput = document.getElementById('usuario-senha');
-    const roleSelect = document.getElementById('usuario-role');
-
-    let roles = []; // Cache para as roles
-
-    const openModal = async (usuario = null) => {
-        formError.style.display = 'none';
-        usuarioForm.reset();
-
-        // Popula roles se ainda não foram carregadas
-        if (roles.length === 0) {
-            roleSelect.innerHTML = '<option value="">Carregando...</option>';
-            try {
-                roles = await roleService.getRoles();
-            } catch (error) {
-                console.error('Falha ao carregar perfis (roles).');
-                roleSelect.innerHTML = '<option value="">Erro ao carregar</option>';
-            }
+    function renderTable(usuarios) {
+        elements.tableBody.innerHTML = '';
+        if (!usuarios || usuarios.length === 0) {
+            elements.tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Nenhum usuário encontrado.</td></tr>';
+            return;
         }
-
-        roleSelect.innerHTML = '<option value="">Selecione um perfil</option>';
-        roles.forEach(r => {
-            roleSelect.innerHTML += `<option value="${r.id}">${r.nome}</option>`;
-        });
-
-        if (usuario) {
-            modalTitle.textContent = 'Editar Usuário';
-            senhaInput.placeholder = "Deixe em branco para não alterar";
-            usuarioIdInput.value = usuario.id;
-            nomeInput.value = usuario.nome;
-            emailInput.value = usuario.email;
-            roleSelect.value = usuario.roleId;
-        } else {
-            modalTitle.textContent = 'Adicionar Usuário';
-            senhaInput.placeholder = "Senha de acesso";
-            usuarioIdInput.value = '';
-        }
-        modal.style.display = 'block';
-    };
-
-    const closeModal = () => {
-        modal.style.display = 'none';
-    };
-
-    const loadUsuarios = async () => {
-        try {
-
-            // Dentro da função loadUsuarios, na iteração forEach:
+        usuarios.forEach(u => {
+            const row = document.createElement('tr');
+            row.dataset.id = u.id;
+            const role = rolesCache.find(r => r.id === u.roleId);
             row.innerHTML = `
                 <td>${u.id}</td>
                 <td>${u.nome}</td>
                 <td>${u.email}</td>
-                <td>${u.role?.nome || 'N/A'}</td>
+                <td>${role?.nome || 'N/A'}</td>
                 <td class="action-buttons">
-                    <button class="btn-edit" data-id="${u.id}">
-                        <span class="material-icons">edit</span>
-                    </button>
-                    <button class="btn-delete" data-id="${u.id}">
-                        <span class="material-icons">delete</span>
-                    </button>
+                    <button class="button warning edit-button" data-id="${u.id}">Editar</button>
+                    <button class="button danger delete-button" data-id="${u.id}">Excluir</button>
                 </td>
             `;
+            elements.tableBody.appendChild(row);
+        });
+    }
 
-            const usuarios = await usuarioService.getUsuarios();
-            tableBody.innerHTML = '';
-            usuarios.forEach(u => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${u.id}</td>
-                    <td>${u.nome}</td>
-                    <td>${u.email}</td>
-                    <td>${u.role?.nome || 'N/A'}</td>
-                    <td class="action-buttons">
-                        <button class="btn-edit" data-id="${u.id}">Editar</button>
-                        <button class="btn-delete" data-id="${u.id}">Excluir</button>
-                    </td>
-                `;
-                tableBody.appendChild(row);
-            });
-        } catch (error) {
-            console.error('[Usuarios] Erro ao carregar usuários:', error);
-            tableBody.innerHTML = `<tr><td colspan="5">Erro ao carregar usuários.</td></tr>`;
-        }
-    };
-
-    // --- Event Listeners ---
-    addBtn.addEventListener('click', () => openModal());
-    closeButton.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
-
-    const windowClickListener = (event) => {
-        if (event.target == modal) closeModal();
-    };
-    window.addEventListener('click', windowClickListener);
-
-    usuarioForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        formError.style.display = 'none';
-
-        const usuarioData = {
-            id: usuarioIdInput.value ? parseInt(usuarioIdInput.value) : 0,
-            nome: nomeInput.value,
-            email: emailInput.value,
-            senhaHash: senhaInput.value,
-            roleId: parseInt(roleSelect.value)
-        };
-
-        if (usuarioData.id && !usuarioData.senhaHash) {
-            delete usuarioData.senhaHash;
-        }
-
+    async function loadUsuarios() {
+        elements.tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Carregando...</td></tr>';
         try {
-            if (usuarioData.id) {
-                await usuarioService.updateUsuario(usuarioData.id, usuarioData);
+            await populateRolesDropdown();
+            const usuarios = await usuarioService.getAll();
+            renderTable(usuarios);
+        } catch (error) {
+            console.error('Erro ao carregar usuários:', error);
+            elements.tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Erro ao carregar os dados.</td></tr>';
+        }
+    }
+
+    function showModal(mode = 'add', usuario = null) {
+        elements.usuarioForm.reset();
+        elements.usuarioId.value = '';
+        elements.password.placeholder = "Digite a senha";
+        elements.password.required = true;
+        
+        populateRolesDropdown().then(() => {
+            if (mode === 'edit' && usuario) {
+                elements.modalTitle.textContent = 'Editar Usuário';
+                elements.usuarioId.value = usuario.id;
+                elements.nome.value = usuario.nome;
+                elements.email.value = usuario.email;
+                elements.roleId.value = usuario.roleId;
+                elements.password.placeholder = "Deixe em branco para não alterar";
+                elements.password.required = false; // Senha não é obrigatória na edição
             } else {
-                const { id, ...createData } = usuarioData;
-                await usuarioService.createUsuario(createData);
+                elements.modalTitle.textContent = 'Novo Usuário';
             }
-            closeModal();
+        });
+        elements.modalOverlay.classList.add('visible');
+    }
+
+    function hideModal() {
+        elements.modalOverlay.classList.remove('visible');
+    }
+
+    async function handleFormSubmit(event) {
+        event.preventDefault();
+        const id = parseInt(elements.usuarioId.value, 10);
+        const usuarioData = {
+            nome: elements.nome.value,
+            email: elements.email.value,
+            roleId: parseInt(elements.roleId.value),
+            senha: elements.password.value || null
+        };
+        
+        if (!id && !usuarioData.senha) {
+            alert("Senha é obrigatória para criar um novo usuário.");
+            return;
+        }
+
+        elements.saveButton.disabled = true;
+        try {
+            if (id) {
+                await usuarioService.update(id, usuarioData);
+            } else {
+                await usuarioService.create(usuarioData);
+            }
+            hideModal();
             loadUsuarios();
         } catch (error) {
-            const errorMessage = error.data?.message || (typeof error.data === 'string' ? error.data : 'Ocorreu um erro ao salvar.');
-            formError.textContent = errorMessage;
-            formError.style.display = 'block';
+            console.error(`Erro ao salvar usuário:`, error);
+            alert('Não foi possível salvar o usuário.');
+        } finally {
+            elements.saveButton.disabled = false;
         }
-    });
+    }
 
-    tableBody.addEventListener('click', async (event) => {
-        const id = event.target.getAttribute('data-id');
-        if (!id) return;
-
-        if (event.target.classList.contains('btn-edit')) {
-            try {
-                const usuario = await usuarioService.getUsuarioById(id);
-                openModal(usuario);
-            } catch (error) {
-                alert('Não foi possível carregar os dados do usuário.');
-            }
+    async function handleDelete(id) {
+        if (!confirm('Tem certeza?')) return;
+        try {
+            await usuarioService.remove(id);
+            loadUsuarios();
+        } catch (error) {
+            console.error(`Erro ao excluir usuário:`, error);
+            alert('Não foi possível excluir o usuário.');
         }
+    }
 
-        if (event.target.classList.contains('btn-delete')) {
-            if (confirm('Tem certeza que deseja excluir este usuário?')) {
-                try {
-                    await usuarioService.deleteUsuario(id);
-                    loadUsuarios();
-                } catch (error) {
-                    alert('Não foi possível excluir o usuário.');
-                }
-            }
-        }
-    });
-
+    // --- LÓGICA PRINCIPAL ---
     loadUsuarios();
+    elements.addButton.addEventListener('click', () => showModal('add'));
+    elements.closeModalButton.addEventListener('click', hideModal);
+    elements.cancelButton.addEventListener('click', hideModal);
+    elements.modalOverlay.addEventListener('click', (e) => { if (e.target === elements.modalOverlay) hideModal(); });
+    elements.usuarioForm.addEventListener('submit', handleFormSubmit);
+    elements.tableBody.addEventListener('click', async (event) => {
+        const target = event.target;
+        const id = parseInt(target.dataset.id);
+        if (target.classList.contains('edit-button')) {
+            const usuario = await usuarioService.getById(id);
+            showModal('edit', usuario);
+        } else if (target.classList.contains('delete-button')) {
+            handleDelete(id);
+        }
+    });
 
-    return () => {
-        console.log('[Usuarios] Destroying page...');
-        window.removeEventListener('click', windowClickListener);
-    };
+    const destroy = () => { console.log("Limpando página de usuários."); };
+    return destroy;
 }
+window.initUsuariosPage = initUsuariosPage;

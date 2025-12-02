@@ -1,334 +1,131 @@
-// --- Funções de UI Auxiliares (Toasts e Modals) ---
-
-/**
- * Exibe uma mensagem de feedback (toast) na tela.
- * @param {string} message A mensagem a ser exibida.
- * @param {'success'|'error'|'info'} type O tipo de mensagem (para styling).
- */
-function showToast(message, type = 'info') {
-    const container = document.getElementById('toast-container');
-    if (!container) return;
-
-    const baseClasses = 'confirmation-box transition duration-300 transform';
-    let icon = 'info', color = 'bg-blue-600';
-
-    switch (type) {
-        case 'success':
-            icon = 'check_circle';
-            color = 'bg-green-600';
-            break;
-        case 'error':
-            icon = 'error';
-            color = 'bg-red-600';
-            break;
-        case 'info':
-        default:
-            icon = 'info';
-            color = 'bg-blue-600';
-            break;
-    }
-
-    const toast = document.createElement('div');
-    toast.className = `${baseClasses} ${color} opacity-0`;
-    toast.innerHTML = `
-        <i class="material-icons">${icon}</i>
-        <span class="text-sm">${message}</span>
-    `;
-
-    container.appendChild(toast);
-
-    // Animação de entrada
-    setTimeout(() => {
-        toast.style.opacity = '1';
-        toast.style.transform = 'translateY(0)';
-    }, 10);
-
-    // Remoção automática
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateY(-20px)';
-        setTimeout(() => toast.remove(), 300);
-    }, 4000);
-}
-
-/**
- * Abre um modal customizado.
- */
-function openCustomModal(modalId, onConfirm = null) {
-    const modal = document.getElementById(modalId);
-    if (!modal) return;
-    modal.style.display = 'block';
-
-    if (modalId === 'delete-confirm-modal' && onConfirm) {
-        const confirmBtn = document.getElementById('confirm-delete-btn');
-        // Remove listener anterior para evitar múltiplas execuções
-        confirmBtn.onclick = null; 
-        confirmBtn.onclick = () => {
-            onConfirm();
-            closeCustomModal(modalId);
-        };
-    }
-}
-
-/**
- * Fecha um modal customizado.
- */
-function closeCustomModal(modalId) {
-    const modal = document.getElementById(modalId);
-    if (!modal) return;
-    modal.style.display = 'none';
-}
-
-
-// --- Serviço de Simulação de API em Memória (ConfiguracaoApiService) ---
-
-// Array para simular o armazenamento de dados em um banco de dados
-//
-// aquei que vais os dados 
-//
-let configuracoes = [
-    { id: 'cfg1', apiNome: 'API Google Maps', endpoint: 'https://maps.googleapis.com', chave: 'MAP_KEY', valor: 'AIzaSy...XYZ' },
-    { id: 'cfg2', apiNome: 'API de Clima', endpoint: 'https://api.weather.com', chave: 'WEATHER_ID', valor: 'WTHR-1234' },
-    { id: 'cfg3', apiNome: 'Serviço de Pagamento', endpoint: 'https://api.payment.pro', chave: 'PAY_SECRET', valor: 'SEC_8765' }
-];
-
-let nextId = configuracoes.length + 1;
-
-// NOTA: Para usar sua API real, substitua os métodos abaixo com a lógica de fetch()
-const ConfiguracaoApiService = {
-    /**
-     * Simula a busca de todas as configurações.
-     */
-    getConfiguracoes: async () => {
-        // Simula latência de rede
-        await new Promise(resolve => setTimeout(resolve, 300));
-        return configuracoes;
-    },
-
-    /**
-     * Simula a busca de uma configuração por ID.
-     */
-    getConfiguracaoById: async (id) => {
-        await new Promise(resolve => setTimeout(resolve, 100));
-        const config = configuracoes.find(c => c.id === id);
-        if (!config) {
-            throw new Error("Configuração não encontrada.");
-        }
-        return config;
-    },
-
-    /**
-     * Simula a criação de uma nova configuração.
-     */
-    createConfiguracao: async (data) => {
-        await new Promise(resolve => setTimeout(resolve, 200));
-        const newConfig = { 
-            id: `cfg${nextId++}`, 
-            apiNome: data.apiNome,
-            endpoint: data.endpoint,
-            chave: data.chave,
-            valor: data.valor
-        };
-        configuracoes.push(newConfig);
-        return newConfig;
-    },
-
-    /**
-     * Simula a atualização de uma configuração.
-     */
-    updateConfiguracao: async (id, data) => {
-        await new Promise(resolve => setTimeout(resolve, 200));
-        const index = configuracoes.findIndex(c => c.id === id);
-        if (index === -1) {
-            throw new Error("Configuração não encontrada para atualização.");
-        }
-        // O spread mantém a referência, garantindo que o ID permaneça o mesmo
-        configuracoes[index] = { ...configuracoes[index], ...data }; 
-        return configuracoes[index];
-    },
-
-    /**
-     * Simula a exclusão de uma configuração.
-     */
-    deleteConfiguracao: async (id) => {
-        await new Promise(resolve => setTimeout(resolve, 200));
-        const initialLength = configuracoes.length;
-        configuracoes = configuracoes.filter(c => c.id !== id);
-        if (configuracoes.length === initialLength) {
-            throw new Error("Configuração não encontrada para exclusão.");
-        }
-    }
-};
-
-
-// --- Lógica da Aplicação Principal ---
+import * as configuracaoService from '../js/services/configuracaoService.js';
 
 function initConfiguracoesPage() {
-    const tableBody = document.querySelector('#configuracoes-table tbody');
-    const modal = document.getElementById('config-modal');
-    const addBtn = document.getElementById('add-config-btn');
-
-    if (!tableBody || !modal || !addBtn) {
-        console.error('[Configuracoes] Elementos essenciais não encontrados.');
-        return;
-    }
-
-    const closeButton = modal.querySelector('.close-button');
-    const cancelBtn = modal.querySelector('#cancel-btn');
-    const configForm = document.getElementById('config-form');
-    const formError = modal.querySelector('#form-error');
-    const modalTitle = modal.querySelector('#modal-title');
-    
-    // Inputs
-    const configIdInput = document.getElementById('config-id');
-    const apiNomeInput = document.getElementById('config-api-nome');
-    const endpointInput = document.getElementById('config-endpoint');
-    const chaveInput = document.getElementById('config-chave');
-    const valorInput = document.getElementById('config-valor');
-
-    const openModal = (config = null) => {
-        formError.classList.add('hidden');
-        formError.textContent = '';
-        configForm.reset();
-        
-        if (config) {
-            modalTitle.textContent = 'Editar Configuração';
-            configIdInput.value = config.id;
-            apiNomeInput.value = config.apiNome || '';
-            endpointInput.value = config.endpoint || '';
-            chaveInput.value = config.chave || '';
-            valorInput.value = config.valor || '';
-        } else {
-            modalTitle.textContent = 'Adicionar Configuração';
-            configIdInput.value = '';
-        }
-        modal.style.display = 'block';
+    const elements = {
+        tableBody: document.getElementById('configuracoes-table-body'),
+        addButton: document.getElementById('add-configuracao-button'),
+        modalOverlay: document.getElementById('configuracao-modal-overlay'),
+        modalTitle: document.getElementById('modal-title'),
+        closeModalButton: document.getElementById('close-modal-button'),
+        cancelButton: document.getElementById('cancel-button'),
+        configuracaoForm: document.getElementById('configuracao-form'),
+        configuracaoId: document.getElementById('configuracao-id'),
+        apiNome: document.getElementById('apiNome'),
+        endpoint: document.getElementById('endpoint'),
+        chave: document.getElementById('chave'),
+        valor: document.getElementById('valor'),
+        saveButton: document.getElementById('save-button'),
     };
 
-    const closeModal = () => {
-        modal.style.display = 'none';
-    };
-
-    const renderConfiguracoes = (configuracoes) => {
-        tableBody.innerHTML = '';
-        if (configuracoes.length === 0) {
-            tableBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-gray-500">Nenhuma configuração encontrada.</td></tr>`;
+    function renderTable(configuracoes) {
+        elements.tableBody.innerHTML = '';
+        if (!configuracoes || configuracoes.length === 0) {
+            elements.tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Nenhuma configuração encontrada.</td></tr>';
             return;
         }
-        
         configuracoes.forEach(c => {
             const row = document.createElement('tr');
-            row.className = 'hover:bg-gray-50';
+            row.dataset.id = c.id;
             row.innerHTML = `
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden sm:table-cell">${c.id}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${c.apiNome || ''}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">${c.endpoint || ''}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${c.chave || ''}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">${c.valor || ''}</td>
-                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium action-buttons flex space-x-2">
-                    <button class="text-indigo-600 hover:text-indigo-900 transition duration-150 btn-edit" data-id="${c.id}" title="Editar">
-                        <i class="material-icons text-lg">edit</i>
-                    </button>
-                    <button class="text-red-600 hover:text-red-900 transition duration-150 btn-delete" data-id="${c.id}" title="Excluir">
-                        <i class="material-icons text-lg">delete</i>
-                    </button>
+                <td>${c.apiNome}</td>
+                <td>${c.chave}</td>
+                <td>${c.valor}</td>
+                <td class="action-buttons">
+                    <button class="button warning edit-button" data-id="${c.id}">Editar</button>
+                    <button class="button danger delete-button" data-id="${c.id}">Excluir</button>
                 </td>
             `;
-            tableBody.appendChild(row);
+            elements.tableBody.appendChild(row);
         });
-    };
+    }
 
-    const loadConfiguracoes = async () => {
-         tableBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-gray-500">Carregando configurações...</td></tr>`;
+    async function loadConfiguracoes() {
+        elements.tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Carregando...</td></tr>';
         try {
-            const configuracoesData = await ConfiguracaoApiService.getConfiguracoes();
-            renderConfiguracoes(configuracoesData);
+            const configuracoes = await configuracaoService.getAll();
+            renderTable(configuracoes);
         } catch (error) {
             console.error('Erro ao carregar configurações:', error);
-            tableBody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-red-500">Erro ao carregar configurações. ${error.message}</td></tr>`;
+            elements.tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center;">Erro ao carregar os dados.</td></tr>';
         }
-    };
-    
-    // --- Event Listeners ---
-    addBtn.addEventListener('click', () => openModal());
-    closeButton.addEventListener('click', closeModal);
-    cancelBtn.addEventListener('click', closeModal);
+    }
 
-    const windowClickListener = (event) => {
-        if (event.target == modal) closeModal();
-    };
-    window.addEventListener('click', windowClickListener);
+    function showModal(mode = 'add', config = null) {
+        elements.configuracaoForm.reset();
+        elements.configuracaoId.value = '';
+        if (mode === 'edit' && config) {
+            elements.modalTitle.textContent = 'Editar Configuração';
+            elements.configuracaoId.value = config.id;
+            elements.apiNome.value = config.apiNome;
+            elements.endpoint.value = config.endpoint;
+            elements.chave.value = config.chave;
+            elements.valor.value = config.valor;
+        } else {
+            elements.modalTitle.textContent = 'Nova Configuração';
+        }
+        elements.modalOverlay.classList.add('visible');
+    }
 
-    configForm.addEventListener('submit', async (event) => {
+    function hideModal() {
+        elements.modalOverlay.classList.remove('visible');
+    }
+
+    async function handleFormSubmit(event) {
         event.preventDefault();
-        formError.classList.add('hidden');
-
-        const configData = {
-            id: configIdInput.value,
-            apiNome: apiNomeInput.value.trim(),
-            endpoint: endpointInput.value.trim(),
-            chave: chaveInput.value.trim(),
-            valor: valorInput.value.trim()
+        const id = parseInt(elements.configuracaoId.value, 10);
+        const data = {
+            apiNome: elements.apiNome.value,
+            endpoint: elements.endpoint.value,
+            chave: elements.chave.value,
+            valor: elements.valor.value,
         };
 
+        elements.saveButton.disabled = true;
         try {
-            if (configData.id) {
-                await ConfiguracaoApiService.updateConfiguracao(configData.id, configData);
-                showToast('Configuração atualizada com sucesso!', 'success');
+            if (id) {
+                await configuracaoService.update(id, data);
             } else {
-                await ConfiguracaoApiService.createConfiguracao(configData);
-                showToast('Configuração criada com sucesso!', 'success');
+                await configuracaoService.create(data);
             }
-            closeModal();
-            loadConfiguracoes(); // Recarrega a lista após a operação
+            hideModal();
+            loadConfiguracoes();
         } catch (error) {
-            console.error('Erro ao salvar configuração:', error);
-            const errorMessage = error.message || 'Ocorreu um erro ao salvar.';
-            formError.textContent = 'Erro: ' + errorMessage;
-            formError.classList.remove('hidden');
+            console.error(`Erro ao salvar configuração:`, error);
+            alert('Não foi possível salvar a configuração.');
+        } finally {
+            elements.saveButton.disabled = false;
+        }
+    }
+
+    async function handleDelete(id) {
+        if (!confirm('Tem certeza?')) return;
+        try {
+            await configuracaoService.remove(id);
+            loadConfiguracoes();
+        } catch (error) {
+            console.error(`Erro ao excluir configuração:`, error);
+            alert('Não foi possível excluir a configuração.');
+        }
+    }
+
+    loadConfiguracoes();
+    elements.addButton.addEventListener('click', () => showModal('add'));
+    elements.closeModalButton.addEventListener('click', hideModal);
+    elements.cancelButton.addEventListener('click', hideModal);
+    elements.modalOverlay.addEventListener('click', (e) => { if (e.target === elements.modalOverlay) hideModal(); });
+    elements.configuracaoForm.addEventListener('submit', handleFormSubmit);
+    elements.tableBody.addEventListener('click', async (event) => {
+        const target = event.target;
+        const id = parseInt(target.dataset.id);
+        if (target.classList.contains('edit-button')) {
+            const config = await configuracaoService.getById(id);
+            showModal('edit', config);
+        } else if (target.classList.contains('delete-button')) {
+            handleDelete(id);
         }
     });
 
-    tableBody.addEventListener('click', async (event) => {
-        const target = event.target.closest('button');
-        if (!target) return;
-
-        const id = target.getAttribute('data-id');
-        if (!id) return;
-
-        if (target.classList.contains('btn-edit')) {
-            try {
-                const config = await ConfiguracaoApiService.getConfiguracaoById(id);
-                openModal(config);
-            } catch (error) {
-                console.error('Erro ao carregar dados para edição:', error);
-                showToast('Não foi possível carregar os dados da configuração.', 'error');
-            }
-        }
-
-        if (target.classList.contains('btn-delete')) {
-            // Abrir modal de confirmação
-            openCustomModal('delete-confirm-modal', async () => {
-                try {
-                    await ConfiguracaoApiService.deleteConfiguracao(id);
-                    showToast('Configuração excluída com sucesso!', 'success');
-                    loadConfiguracoes(); // Recarrega a lista após a exclusão
-                } catch (error) {
-                    console.error('Erro ao excluir configuração:', error);
-                    showToast('Não foi possível excluir a configuração. Tente novamente.', 'error');
-                }
-            });
-        }
-    });
-
-    // Inicia o carregamento dos dados quando a página carrega
-    window.onload = loadConfiguracoes;
-
-    // Função de limpeza (apenas para organização)
-    return () => {
-        window.removeEventListener('click', windowClickListener);
-    };
+    const destroy = () => { console.log("Limpando página de configurações."); };
+    return destroy;
 }
-
-// Inicializa a aplicação
-initConfiguracoesPage();
+window.initConfiguracoesPage = initConfiguracoesPage;

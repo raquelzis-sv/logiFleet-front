@@ -1,9 +1,7 @@
-// Funções para interagir com a API de Logs de Integração
+import { fetchWrapper, API_BASE_URL } from './api.js';
 
-const logIntegracaoService = {
-    async getLogs() {
-        return await fetchWrapper(`${API_BASE_URL}/logintegracao`, {
-            method: 'GET',
-        });
-    }
-};
+const LOGS_BASE_URL = `${API_BASE_URL}/logintegracao`;
+
+export async function getAll(options = {}) {
+    return await fetchWrapper(LOGS_BASE_URL, options);
+}

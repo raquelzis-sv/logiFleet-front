@@ -1,71 +1,70 @@
-<div class="page-container">
-    <div class="page-header">
-        <h2>Gerenciamento de Clientes</h2>
-        <button id="add-cliente-btn" class="btn-primary">Adicionar Cliente</button>
-    </div>
+<!-- Cabeçalho da Página -->
+<div class="page-header">
+    <h1>Gerenciar Clientes</h1>
+    <button id="add-cliente-button" class="button">Adicionar Cliente</button>
+</div>
 
-    <div class="table-container">
-        <table id="clientes-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome da Empresa</th>
-                    <th>CNPJ</th>
-                    <th>Inscrição Estadual</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Linhas da tabela serão inseridas aqui pelo JavaScript -->
-            </tbody>
-        </table>
-    </div>
+<!-- Container da Tabela -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Nome da Empresa</th>
+                <th>CNPJ</th>
+                <th>Contato</th>
+                <th>Telefone</th>
+                <th>Email</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="clientes-table-body">
+            <tr>
+                <td colspan="6" style="text-align:center;">Carregando clientes...</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 <!-- Modal para Adicionar/Editar Cliente -->
-<div id="cliente-modal" class="modal">
-    <div class="modal-content">
+<div id="cliente-modal-overlay" class="modal-overlay">
+    <div class="modal">
         <div class="modal-header">
-            <h3 id="modal-title">Adicionar Cliente</h3>
-            <span class="close-button">&times;</span>
+            <h2 id="modal-title">Adicionar Cliente</h2>
+            <button id="close-modal-button" class="close-button">&times;</button>
         </div>
-        <div class="modal-body">
-            <form id="cliente-form">
+        <form id="cliente-form">
+            <div class="modal-body">
                 <input type="hidden" id="cliente-id">
+                
                 <div class="form-group">
-                    <label for="nome-empresa">Nome da Empresa</label>
-                    <input type="text" id="nome-empresa" required>
+                    <label for="nomeEmpresa">Nome da Empresa</label>
+                    <input type="text" id="nomeEmpresa" name="nomeEmpresa" required>
                 </div>
+                
                 <div class="form-group">
                     <label for="cnpj">CNPJ</label>
-                    <input type="text" id="cnpj" required>
+                    <input type="text" id="cnpj" name="cnpj" required minlength="14" maxlength="14" pattern="\d{14}" title="Digite apenas os 14 números do CNPJ.">
                 </div>
+                
                 <div class="form-group">
-                    <label for="inscricao-estadual">Inscrição Estadual</label>
-                    <input type="text" id="inscricao-estadual">
+                    <label for="nomeContato">Nome do Contato</label>
+                    <input type="text" id="nomeContato" name="nomeContato">
                 </div>
-                 <div class="form-group">
-                    <label for="responsavel">Responsavel</label>
-                    <input type="text" id="responsavel" required>
+                
+                <div class="form-group">
+                    <label for="telefone">Telefone</label>
+                    <input type="tel" id="telefone" name="telefone">
                 </div>
-                 <div class="form-group">
-                    <label for="email-contato">Email Contato</label>
-                    <input type="text" id="email-contato" required>
+                
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email">
                 </div>
-                 <div class="form-group">
-                    <label for="telefone-contato">Telefone Contato</label>
-                    <input type="text" id="telefone-contato" required>
-                </div>
-                <div id="form-error" class="error-message"></div>
-                <div class="modal-footer">
-                    <button type="button" id="cancel-btn" class="btn-secondary">Cancelar</button>
-                    <button type="submit" id="save-btn" class="btn-primary">Salvar</button>
-                </div>
-            </form>
-        </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="cancel-button" class="button danger">Cancelar</button>
+                <button type="submit" id="save-button" class="button success">Salvar</button>
+            </div>
+        </form>
     </div>
 </div>
-
-<script src="../js/services/api.js" type="module"></script>
-<script src="../js/services/clienteService.js" type="module"></script>
-<script src="clientes.js" type="module"></script>

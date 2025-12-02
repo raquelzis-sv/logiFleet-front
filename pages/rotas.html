@@ -1,93 +1,81 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gerenciamento de Rotas</title>
-    <link rel="stylesheet" href="../css/rotas.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet">
-    </head>
-<body>
+<!-- Cabeçalho da Página -->
+<div class="page-header">
+    <h1>Gerenciar Rotas</h1>
+    <button id="add-rota-button" class="button">Planejar Nova Rota</button>
+</div>
 
-<div class="page-container" id="rotas-page-container">
+<!-- Container da Tabela -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Data</th>
+                <th>Status</th>
+                <th>Veículo</th>
+                <th>Motorista</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="rotas-table-body">
+            <tr>
+                <td colspan="6" style="text-align:center;">Carregando rotas...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 
-    <div id="view-list-rotas">
-        <div class="page-header">
-            <h2><span class="material-icons-outlined">route</span> Gerenciamento de Rotas</h2>
-            <button id="add-rota-btn" class="btn-primary">
-                <span class="material-icons-outlined">add</span> Planejar Nova Rota
-            </button>
+<!-- Modal para Adicionar/Editar Rota -->
+<div id="rota-modal-overlay" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="modal-title">Planejar Nova Rota</h2>
+            <button id="close-modal-button" class="close-button">&times;</button>
         </div>
-        <div class="table-container">
-            <table id="rotas-table">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Data</th>
-                        <th>Veículo</th>
-                        <th>Motorista</th>
-                        <th>Status</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    </tbody>
-            </table>
-        </div>
-    </div>
-
-    <div id="view-create-rota" style="display: none;">
-        <div class="page-header">
-            <h2><span class="material-icons-outlined">drive_eta</span> Planejar Nova Rota</h2>
-            <button id="cancel-creation-btn" class="btn-secondary">
-                <span class="material-icons-outlined">close</span> Cancelar
-            </button>
-        </div>
-        
-        <form id="create-rota-form" class="form-card">
-            <div class="form-grid">
+        <form id="rota-form">
+            <div class="modal-body">
+                <input type="hidden" id="rota-id">
+                
                 <div class="form-group">
-                    <label for="select-veiculo">1. Selecione um Veículo Disponível</label>
-                    <select id="select-veiculo" required></select>
+                    <label for="dataRota">Data da Rota</label>
+                    <input type="date" id="dataRota" name="dataRota" required>
                 </div>
+                
                 <div class="form-group">
-                    <label for="select-motorista">2. Selecione um Motorista</label>
-                    <select id="select-motorista" required></select>
+                    <label for="veiculoId">Veículo</label>
+                    <select id="veiculoId" name="veiculoId" required>
+                        <option value="">Carregando veículos...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="motoristaId">Motorista</label>
+                    <select id="motoristaId" name="motoristaId" required>
+                        <option value="">Carregando motoristas...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="pedidosIds">Pedidos Pendentes (segure Ctrl/Cmd para selecionar vários)</label>
+                    <select id="pedidosIds" name="pedidosIds" required multiple style="height: 150px;">
+                        <option value="">Carregando pedidos...</option>
+                    </select>
+                </div>
+
+                 <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" required>
+                        <option value="Planejada">Planejada</option>
+                        <option value="EmAndamento">Em Andamento</option>
+                        <option value="Concluida">Concluída</option>
+                        <option value="Cancelada">Cancelada</option>
+                    </select>
                 </div>
             </div>
-
-            <h4>3. Selecione os Pedidos para a Rota</h4>
-            <div id="form-error" class="error-message"></div>
-            <div class="table-container table-selection">
-                <table id="pedidos-pendentes-table">
-                    <thead>
-                        <tr>
-                            <th><input type="checkbox" id="select-all-pedidos"></th>
-                            <th>ID</th>
-                            <th>Cliente</th>
-                            <th>Endereço</th>
-                            <th>Peso (kg)</th>
-                            <th>Volume (m³)</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        </tbody>
-                </table>
-            </div>
-
             <div class="modal-footer">
-                <button type="submit" id="save-rota-btn" class="btn-primary">
-                    <span class="material-icons-outlined">save</span> Salvar Rota
-                </button>
+                <button type="button" id="cancel-button" class="button danger">Cancelar</button>
+                <button type="submit" id="save-button" class="button success">Salvar</button>
             </div>
         </form>
     </div>
-
-    <div id="view-details-rota" style="display: none;">
-        </div>
-
 </div>
-
-<script src="rotas.js"></script>
-</body>
-</html>
