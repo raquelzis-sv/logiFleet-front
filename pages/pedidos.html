@@ -13,6 +13,7 @@
                 <th>Data Limite</th>
                 <th>Status</th>
                 <th>Peso (Kg)</th>
+                <th>Volume (m³)</th>
                 <th>Ações</th>
             </tr>
         </thead>
@@ -43,11 +44,11 @@
                 </div>
                 <div class="form-group">
                     <label for="pesoTotalKg">Peso Total (Kg)</label>
-                    <input type="number" id="pesoTotalKg" name="pesoTotalKg" step="0.1" required>
+                    <input type="number" id="pesoTotalKg" name="pesoTotalKg" step="0.1" readonly>
                 </div>
                 <div class="form-group">
                     <label for="volumeTotalM3">Volume Total (m³)</label>
-                    <input type="number" id="volumeTotalM3" name="volumeTotalM3" step="0.1" required>
+                    <input type="number" id="volumeTotalM3" name="volumeTotalM3" step="0.1" readonly>
                 </div>
                 <div class="form-group">
                     <label for="status">Status</label>
@@ -58,10 +59,55 @@
                         <option value="Cancelado">Cancelado</option>
                     </select>
                 </div>
+
+                <!-- Seção de Itens do Pedido -->
+                <div class="sub-section">
+                    <h3>Itens do Pedido</h3>
+                    <div class="table-container-modal">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Descrição</th>
+                                    <th>Qtd.</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="itens-pedido-table-body">
+                                <!-- Itens serão inseridos aqui -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <form id="item-pedido-form" class="sub-form">
+                        <input type="hidden" id="item-pedido-id">
+                        <div class="form-group">
+                            <input type="text" id="item-descricao" placeholder="Descrição do item" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="number" id="item-quantidade" placeholder="Qtd." required min="1">
+                        </div>
+                        <div class="form-group">
+                            <input type="number" id="item-peso" placeholder="Peso (kg)" required min="0" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <input type="number" id="item-volume" placeholder="Volume (m³)" required min="0" step="0.01">
+                        </div>
+                         <div class="form-group">
+                            <input type="text" id="item-codigo" placeholder="Código do Produto">
+                        </div>
+                        <div class="form-group action-buttons">
+                             <button type="button" id="add-item-button" class="button">Adicionar Item</button>
+                             <button type="button" id="update-item-button" class="button warning" style="display:none;">Atualizar Item</button>
+                             <button type="button" id="cancel-edit-item-button" class="button danger" style="display:none;">Cancelar Edição</button>
+                        </div>
+                    </form>
+                </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" id="cancel-button" class="button danger">Cancelar</button>
-                <button type="submit" id="save-button" class="button success">Salvar</button>
+                <button type="submit" id="save-button" class="button success">Salvar Pedido</button>
             </div>
         </form>
     </div>
