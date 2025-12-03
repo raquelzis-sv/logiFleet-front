@@ -37,6 +37,11 @@ const routes = {
         script: 'pages/pedidos.js',
         init: () => window.initPedidosPage?.()
     },
+    '/itens-pedido': {
+        template: 'pages/itens-pedido.html',
+        script: 'pages/itens-pedido.js',
+        init: () => window.initItensPedidoPage?.()
+    },
     '/manutencoes': {
         template: 'pages/manutencoes.html',
         script: 'pages/manutencoes.js',

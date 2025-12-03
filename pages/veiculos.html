@@ -14,14 +14,15 @@
                 <th>Marca</th>
                 <th>Modelo</th>
                 <th>Ano</th>
-                <th>Capacidade (m³)</th>
+                <th>Capacidade Carga (kg)</th>
+                <th>Capacidade Volume (m³)</th>
                 <th>Ações</th>
             </tr>
         </thead>
         <tbody id="vehicles-table-body">
             <!-- Linha de exemplo de carregamento -->
             <tr>
-                <td colspan="6" style="text-align:center;">Carregando veículos...</td>
+                <td colspan="7" style="text-align:center;">Carregando veículos...</td>
             </tr>
         </tbody>
     </table>
@@ -41,7 +42,7 @@
                 
                 <div class="form-group">
                     <label for="placa">Placa</label>
-                    <input type="text" id="placa" name="placa" required maxlength="10">
+                    <input type="text" id="placa" name="placa" required>
                 </div>
                 
                 <div class="form-group">
@@ -58,10 +59,15 @@
                     <label for="ano">Ano de Fabricação</label>
                     <input type="number" id="ano" name="ano" required min="1900" max="2100">
                 </div>
+
+                <div class="form-group">
+                    <label for="capacidadeCarga">Capacidade de Carga (kg)</label>
+                    <input type="number" id="capacidadeCarga" name="capacidadeCarga" required min="0" step="0.1">
+                </div>
                 
                 <div class="form-group">
-                    <label for="capacidade">Capacidade de Carga (m³)</label>
-                    <input type="number" id="capacidade" name="capacidade" required min="0" step="0.1">
+                    <label for="capacidadeVolume">Capacidade de Volume (m³)</label>
+                    <input type="number" id="capacidadeVolume" name="capacidadeVolume" required min="0" step="0.1">
                 </div>
             </div>
             <div class="modal-footer">

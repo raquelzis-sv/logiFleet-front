@@ -15,7 +15,8 @@ function initVeiculosPage() {
         marca: document.getElementById('marca'),
         modelo: document.getElementById('modelo'),
         ano: document.getElementById('ano'),
-        capacidade: document.getElementById('capacidade'),
+        capacidadeCarga: document.getElementById('capacidadeCarga'),
+        capacidadeVolume: document.getElementById('capacidadeVolume'),
         saveButton: document.getElementById('save-button'),
     };
 
@@ -25,7 +26,7 @@ function initVeiculosPage() {
     function renderTable(veiculos) {
         elements.tableBody.innerHTML = '';
         if (veiculos.length === 0) {
-            elements.tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Nenhum veículo encontrado.</td></tr>';
+            elements.tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhum veículo encontrado.</td></tr>';
             return;
         }
         veiculos.forEach(veiculo => {
@@ -35,8 +36,9 @@ function initVeiculosPage() {
                 <td>${veiculo.placa}</td>
                 <td>${veiculo.marca}</td>
                 <td>${veiculo.modelo}</td>
-                <td>${veiculo.ano}</td>
-                <td>${veiculo.capacidade}</td>
+                <td>${veiculo.anoFabricacao}</td>
+                <td>${veiculo.capacidadeCarga}</td>
+                <td>${veiculo.capacidadeVolume}</td>
                 <td class="action-buttons">
                     <button class="button warning edit-button" data-id="${veiculo.id}">Editar</button>
                     <button class="button danger delete-button" data-id="${veiculo.id}">Excluir</button>
@@ -47,13 +49,13 @@ function initVeiculosPage() {
     }
 
     async function loadVehicles() {
-        elements.tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Carregando...</td></tr>';
+        elements.tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Carregando...</td></tr>';
         try {
             const veiculos = await veiculoService.getAll();
             renderTable(veiculos);
         } catch (error) {
             console.error('Erro ao carregar veículos:', error);
-            elements.tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Erro ao carregar os dados. Verifique o console (F12).</td></tr>';
+            elements.tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Erro ao carregar os dados. Verifique o console (F12).</td></tr>';
         }
     }
 
@@ -67,8 +69,9 @@ function initVeiculosPage() {
             elements.placa.value = veiculo.placa;
             elements.marca.value = veiculo.marca;
             elements.modelo.value = veiculo.modelo;
-            elements.ano.value = veiculo.ano;
-            elements.capacidade.value = veiculo.capacidade;
+            elements.ano.value = veiculo.anoFabricacao;
+            elements.capacidadeCarga.value = veiculo.capacidadeCarga;
+            elements.capacidadeVolume.value = veiculo.capacidadeVolume;
         } else {
             elements.modalTitle.textContent = 'Adicionar Veículo';
         }
@@ -87,9 +90,10 @@ function initVeiculosPage() {
         const veiculoData = {
             placa: elements.placa.value,
             marca: elements.marca.value,
-            modelo: document.getElementById('modelo').value,
-            ano: parseInt(elements.ano.value, 10),
-            capacidade: parseFloat(elements.capacidade.value),
+            modelo: elements.modelo.value,
+            anoFabricacao: parseInt(elements.ano.value, 10),
+            capacidadeCarga: parseFloat(elements.capacidadeCarga.value),
+            capacidadeVolume: parseFloat(elements.capacidadeVolume.value),
         };
 
         elements.saveButton.textContent = 'Salvando...';
