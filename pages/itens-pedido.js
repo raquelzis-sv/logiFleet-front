@@ -1,71 +1,56 @@
-import * as itemPedidoService from '../js/services/itemPedidoService.js';
+// pages/itens-pedido.js
+import itemPedidoService from '../js/services/itemPedidoService.js';
 
 function initItensPedidoPage() {
+    // Mapeamento de elementos do DOM
     const elements = {
-        tableBody: document.getElementById('itens-table-body'),
+        tableBody: document.querySelector('#itens-disponiveis-table tbody'),
         addButton: document.getElementById('add-item-button'),
         modalOverlay: document.getElementById('item-modal-overlay'),
         modalTitle: document.getElementById('modal-title'),
         closeModalButton: document.getElementById('close-modal-button'),
         itemForm: document.getElementById('item-form'),
         itemId: document.getElementById('item-id'),
-        itemDescricao: document.getElementById('item-descricao'),
-        itemPeso: document.getElementById('item-peso'),
-        itemVolume: document.getElementById('item-volume'),
-        itemCodigo: document.getElementById('item-codigo'),
-        itemQuantidade: document.getElementById('item-quantidade'),
         saveButton: document.getElementById('save-button'),
+        errorMessage: document.getElementById('error-message')
     };
 
-    function renderTable(itens) {
+    function renderTable(items) {
         elements.tableBody.innerHTML = '';
-        if (!itens || itens.length === 0) {
-            elements.tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Nenhum item encontrado.</td></tr>';
+        if (items.length === 0) {
+            elements.tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Nenhum item disponível. Crie um novo!</td></tr>';
             return;
         }
-        itens.forEach(item => {
+        items.forEach(item => {
             const row = document.createElement('tr');
-            row.dataset.id = item.id;
             row.innerHTML = `
                 <td>${item.id}</td>
                 <td>${item.descricao}</td>
-                <td>${item.pesoUnitarioKg.toFixed(2)}</td>
-                <td>${item.volumeUnitarioM3.toFixed(2)}</td>
-                <td>${item.codigoProduto || 'N/A'}</td>
-                <td class="action-buttons">
-                    <button class="button warning edit-button" data-id="${item.id}">Editar</button>
-                    <button class="button danger delete-button" data-id="${item.id}">Excluir</button>
-                </td>
+                <td>${item.quantidade}</td>
+                <td>${item.pesoUnitarioKg}</td>
+                <td>${item.volumeUnitarioM3}</td>
+                <td>${item.codigoProduto || ''}</td>
+                <td><button class="button danger delete-btn" data-id="${item.id}">Excluir</button></td>
             `;
             elements.tableBody.appendChild(row);
         });
     }
 
-    async function loadItens() {
-        elements.tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Carregando...</td></tr>';
+    async function loadItensDisponiveis() {
         try {
-            const itens = await itemPedidoService.getAll();
-            renderTable(itens);
+            const items = await itemPedidoService.getItensPedido(true); // true para buscar itens sem pedido
+            renderTable(items);
         } catch (error) {
-            console.error('Erro ao carregar itens:', error);
-            elements.tableBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">Erro ao carregar os dados.</td></tr>';
+            console.error(error);
+            elements.tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center;">Falha ao carregar itens.</td></tr>';
         }
     }
 
-    function showModal(mode = 'add', item = null) {
+    function showModal() {
         elements.itemForm.reset();
-        if (mode === 'edit' && item) {
-            elements.modalTitle.textContent = 'Editar Item';
-            elements.itemId.value = item.id;
-            elements.itemDescricao.value = item.descricao;
-            elements.itemPeso.value = item.pesoUnitarioKg;
-            elements.itemVolume.value = item.volumeUnitarioM3;
-            elements.itemCodigo.value = item.codigoProduto;
-            elements.itemQuantidade.value = item.quantidade;
-        } else {
-            elements.modalTitle.textContent = 'Novo Item';
-            elements.itemId.value = '';
-        }
+        elements.itemId.value = '';
+        elements.modalTitle.textContent = 'Novo Item';
+        elements.errorMessage.textContent = '';
         elements.modalOverlay.classList.add('visible');
     }
 
@@ -75,50 +60,50 @@ function initItensPedidoPage() {
 
     async function handleFormSubmit(event) {
         event.preventDefault();
-        const id = parseInt(elements.itemId.value, 10);
+        elements.errorMessage.textContent = '';
+        elements.saveButton.disabled = true;
+
+        const formData = new FormData(elements.itemForm);
         const itemData = {
-            id: id || 0,
-            descricao: elements.itemDescricao.value,
-            pesoUnitarioKg: parseFloat(elements.itemPeso.value),
-            volumeUnitarioM3: parseFloat(elements.itemVolume.value),
-            codigoProduto: elements.itemCodigo.value,
-            quantidade: parseInt(elements.itemQuantidade.value),
+            // id é omitido para criação
+            descricao: formData.get('descricao'),
+            quantidade: parseInt(formData.get('quantidade'), 10),
+            pesoUnitarioKg: parseFloat(formData.get('peso')),
+            volumeUnitarioM3: parseFloat(formData.get('volume')),
+            codigoProduto: formData.get('codigo') || null,
+            pedidoId: null
         };
 
-        elements.saveButton.disabled = true;
         try {
-            if (id) {
-                await itemPedidoService.update(id, itemData);
-            } else {
-                await itemPedidoService.create(itemData);
-            }
+            await itemPedidoService.createItemPedido(itemData);
             hideModal();
-            loadItens();
+            loadItensDisponiveis(); // Recarrega a lista
         } catch (error) {
-            console.error(`Erro ao salvar item:`, error);
-            alert('Não foi possível salvar o item.');
+            console.error('Falha ao criar item:', error);
+            elements.errorMessage.textContent = error.data?.message || 'Erro desconhecido ao salvar. Tente novamente.';
         } finally {
             elements.saveButton.disabled = false;
         }
     }
 
-    async function handleDelete(id) {
-        if (!confirm('Tem certeza?')) return;
-        try {
-            await itemPedidoService.remove(id);
-            loadItens();
-        } catch (error) {
-            console.error(`Erro ao excluir item:`, error);
-            alert('Não foi possível excluir o item. Ele pode estar associado a um pedido.');
+    async function handleDelete(event) {
+        if (!event.target.classList.contains('delete-btn')) return;
+
+        const id = event.target.dataset.id;
+        if (confirm(`Tem certeza que deseja excluir o item ${id}?`)) {
+            try {
+                await itemPedidoService.deleteItemPedido(id);
+                loadItensDisponiveis();
+            } catch (error) {
+                console.error('Falha ao deletar item:', error);
+                alert(error.data?.message || 'Não foi possível excluir o item.');
+            }
         }
     }
-
+    
     // --- LÓGICA PRINCIPAL ---
-    loadItens();
-    elements.addButton.addEventListener('click', () => {
-        console.log('Botão "Novo Item" clicado!');
-        showModal('add');
-    });
+    // Adiciona event listeners
+    elements.addButton.addEventListener('click', showModal);
     elements.closeModalButton.addEventListener('click', hideModal);
     elements.modalOverlay.addEventListener('click', (e) => {
         if (e.target === elements.modalOverlay) {
@@ -126,20 +111,16 @@ function initItensPedidoPage() {
         }
     });
     elements.itemForm.addEventListener('submit', handleFormSubmit);
+    elements.tableBody.addEventListener('click', handleDelete);
 
-    elements.tableBody.addEventListener('click', async (event) => {
-        if (event.target.classList.contains('edit-button')) {
-            const id = parseInt(event.target.dataset.id);
-            const item = await itemPedidoService.getById(id);
-            showModal('edit', item);
-        } else if (event.target.classList.contains('delete-button')) {
-            const id = parseInt(event.target.dataset.id);
-            handleDelete(id);
-        }
-    });
-
-    const destroy = () => { console.log("Limpando página de itens de pedido."); };
-    return destroy;
+    // Carrega os itens ao iniciar a página
+    loadItensDisponiveis();
+    
+    // Retorna função de limpeza se necessário
+    return () => {
+        console.log('Limpando página de itens de pedido.');
+    };
 }
 
-window.initItensPedidoPage = initItensPedidoPage;
+// Inicializa a página
+initItensPedidoPage();

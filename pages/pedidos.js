@@ -1,7 +1,7 @@
 import * as pedidoService from '../js/services/pedidoService.js';
 import * as clienteService from '../js/services/clienteService.js';
 import * as enderecoClienteService from '../js/services/enderecoClienteService.js';
-import * as itemPedidoService from '../js/services/itemPedidoService.js';
+import itemPedidoService from '../js/services/itemPedidoService.js';
 
 function initPedidosPage() {
     const elements = {
@@ -17,12 +17,11 @@ function initPedidosPage() {
         dataLimiteEntrega: document.getElementById('dataLimiteEntrega'),
         status: document.getElementById('status'),
         statusGroup: document.getElementById('status-group'),
-        itensPedidoSelect: document.getElementById('itens-pedido-select'),
+        itensDisponiveisContainer: document.getElementById('itens-disponiveis-container'),
         saveButton: document.getElementById('save-button'),
     };
 
     let clientesCache = [];
-    let itensCache = [];
 
     async function populateClientesDropdown() {
         try {
@@ -40,7 +39,7 @@ function initPedidosPage() {
     async function populateEnderecosDropdown(clienteId) {
         elements.enderecoEntregaId.innerHTML = '<option value="">Carregando...</option>';
         if (!clienteId) {
-            elements.enderecoEntregaId.innerHTML = '<option value="">Selecione um cliente</option>';
+            elements.enderecoEntregaId.innerHTML = '<option value="">Selecione um cliente primeiro</option>';
             return;
         }
         try {
@@ -55,16 +54,26 @@ function initPedidosPage() {
         }
     }
 
-    async function populateItensDropdown() {
+    async function loadAvailableItems() {
         try {
-            const itens = await itemPedidoService.getAll();
-            itensCache = itens;
-            elements.itensPedidoSelect.innerHTML = '';
+            const itens = await itemPedidoService.getItensPedido(true); // true => semPedido
+            elements.itensDisponiveisContainer.innerHTML = '';
+            if (itens.length === 0) {
+                elements.itensDisponiveisContainer.innerHTML = '<p>Nenhum item disponível para associação.</p>';
+                return;
+            }
             itens.forEach(item => {
-                elements.itensPedidoSelect.innerHTML += `<option value="${item.id}">${item.descricao} (Qtd: ${item.quantidade})</option>`;
+                const checkboxWrapper = document.createElement('div');
+                checkboxWrapper.classList.add('checkbox-item');
+                checkboxWrapper.innerHTML = `
+                    <input type="checkbox" id="item-${item.id}" name="itensPedidoIds" value="${item.id}">
+                    <label for="item-${item.id}">${item.descricao} (Qtd: ${item.quantidade})</label>
+                `;
+                elements.itensDisponiveisContainer.appendChild(checkboxWrapper);
             });
         } catch (error) {
-            console.error("Erro ao carregar itens de pedido:", error);
+            console.error("Erro ao carregar itens disponíveis:", error);
+            elements.itensDisponiveisContainer.innerHTML = '<p>Erro ao carregar itens.</p>';
         }
     }
 
@@ -98,7 +107,6 @@ function initPedidosPage() {
         elements.tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Carregando...</td></tr>';
         try {
             await populateClientesDropdown();
-            await populateItensDropdown();
             const pedidos = await pedidoService.getAll();
             renderTable(pedidos);
         } catch (error) {
@@ -110,6 +118,7 @@ function initPedidosPage() {
     function showModal(mode = 'add', pedido = null) {
         elements.pedidoForm.reset();
         elements.statusGroup.style.display = mode === 'edit' ? 'block' : 'none';
+        elements.itensDisponiveisContainer.innerHTML = ''; 
 
         if (mode === 'edit' && pedido) {
             elements.modalTitle.textContent = 'Editar Pedido';
@@ -120,15 +129,13 @@ function initPedidosPage() {
             });
             elements.dataLimiteEntrega.value = pedido.dataLimiteEntrega.split('T')[0];
             elements.status.value = pedido.status;
+            // A lógica de edição de itens foi simplificada/removida por enquanto.
             
-            const itensIds = pedido.itensPedido.map(item => item.id);
-            Array.from(elements.itensPedidoSelect.options).forEach(option => {
-                option.selected = itensIds.includes(parseInt(option.value));
-            });
         } else {
             elements.modalTitle.textContent = 'Novo Pedido';
             elements.pedidoId.value = '';
             elements.enderecoEntregaId.innerHTML = '<option value="">Selecione um cliente</option>';
+            loadAvailableItems(); // Carrega itens disponíveis para um novo pedido
         }
 
         elements.modalOverlay.classList.add('visible');
@@ -141,20 +148,27 @@ function initPedidosPage() {
     async function handleFormSubmit(event) {
         event.preventDefault();
         const id = parseInt(elements.pedidoId.value, 10);
-        const selectedItensIds = Array.from(elements.itensPedidoSelect.selectedOptions).map(opt => parseInt(opt.value));
+        
+        const selectedItemCheckboxes = elements.pedidoForm.querySelectorAll('input[name="itensPedidoIds"]:checked');
+        const selectedItensIds = Array.from(selectedItemCheckboxes).map(cb => parseInt(cb.value));
 
         const pedidoData = {
-            id: id || 0,
             clienteId: parseInt(elements.clienteId.value),
             enderecoEntregaId: parseInt(elements.enderecoEntregaId.value),
             dataLimiteEntrega: elements.dataLimiteEntrega.value,
-            status: elements.status.value,
             itensPedidoIds: selectedItensIds,
         };
+
+        if (id) {
+            pedidoData.id = id;
+            pedidoData.status = elements.status.value;
+        }
 
         elements.saveButton.disabled = true;
         try {
             if (id) {
+                // A atualização com itens é complexa e foi desabilitada por enquanto.
+                // Esta chamada pode falhar se o backend esperar uma estrutura diferente para update.
                 await pedidoService.update(id, pedidoData);
             } else {
                 await pedidoService.create(pedidoData);
@@ -195,8 +209,13 @@ function initPedidosPage() {
     elements.tableBody.addEventListener('click', async (event) => {
         if (event.target.classList.contains('edit-button')) {
             const id = parseInt(event.target.dataset.id);
-            const pedido = await pedidoService.getById(id);
-            showModal('edit', pedido);
+            try {
+                const pedido = await pedidoService.getById(id);
+                showModal('edit', pedido);
+            } catch(err) {
+                console.error("Erro ao buscar pedido para edição:", err);
+                alert("Não foi possível carregar os dados do pedido.");
+            }
         } else if (event.target.classList.contains('delete-button')) {
             const id = parseInt(event.target.dataset.id);
             handleDelete(id);

@@ -1,29 +1,28 @@
-import { fetchWrapper, API_BASE_URL } from './api.js';
+// js/services/itemPedidoService.js
+import { fetchWrapper } from './api.js';
+const API_URL = 'https://localhost:7188/api/ItemPedido'; // Make sure the port is correct
 
-const API_URL = `${API_BASE_URL}/ItemPedido`;
+const itemPedidoService = {
+    async getItensPedido(semPedido = false) {
+        let url = API_URL;
+        if (semPedido) {
+            url += '?semPedido=true';
+        }
+        return fetchWrapper(url);
+    },
 
-export const getAll = async () => {
-    return await fetchWrapper(API_URL, { method: 'GET' });
+    async createItemPedido(itemData) {
+        return fetchWrapper(API_URL, {
+            method: 'POST',
+            body: JSON.stringify(itemData)
+        });
+    },
+
+    async deleteItemPedido(id) {
+        return fetchWrapper(`${API_URL}/${id}`, {
+            method: 'DELETE'
+        });
+    }
 };
 
-export const getById = async (id) => {
-    return await fetchWrapper(`${API_URL}/${id}`, { method: 'GET' });
-};
-
-export const create = async (itemPedido) => {
-    return await fetchWrapper(API_URL, {
-        method: 'POST',
-        body: JSON.stringify(itemPedido),
-    });
-};
-
-export const update = async (id, itemPedido) => {
-    return await fetchWrapper(`${API_URL}/${id}`, {
-        method: 'PUT',
-        body: JSON.stringify(itemPedido),
-    });
-};
-
-export const remove = async (id) => {
-    return await fetchWrapper(`${API_URL}/${id}`, { method: 'DELETE' });
-};
+export default itemPedidoService;

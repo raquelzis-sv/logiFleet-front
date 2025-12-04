@@ -60,10 +60,75 @@
                     <label for="email">Email</label>
                     <input type="email" id="email" name="email">
                 </div>
+                <div class="form-group" id="manage-enderecos-button-container" style="display: none;">
+                    <button type="button" id="manage-enderecos-button" class="button secondary">Gerenciar Endereços</button>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" id="cancel-button" class="button danger">Cancelar</button>
                 <button type="submit" id="save-button" class="button success">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal para Visualizar Endereços do Cliente -->
+<div id="enderecos-modal-overlay" class="modal-overlay">
+    <div class="modal large">
+        <div class="modal-header">
+            <h2 id="enderecos-modal-title">Endereços do Cliente</h2>
+            <button id="close-enderecos-modal-button" class="close-button">&times;</button>
+        </div>
+        <div id="enderecos-list-container" class="modal-body">
+            <!-- Endereços serão carregados aqui -->
+        </div>
+    </div>
+</div>
+
+<!-- Modal para Adicionar/Editar Endereço (Formulário) -->
+<div id="endereco-form-modal-overlay" class="modal-overlay">
+    <div class="modal">
+        <div class="modal-header">
+            <h2 id="endereco-form-modal-title">Adicionar Endereço</h2>
+            <button id="close-endereco-form-modal-button" class="close-button">&times;</button>
+        </div>
+        <form id="endereco-form">
+            <div class="modal-body">
+                <input type="hidden" id="endereco-id">
+                <input type="hidden" id="endereco-cliente-id"> <!-- Para associar ao cliente correto -->
+                
+                <div class="form-group">
+                    <label for="cep">CEP</label>
+                    <input type="text" id="cep" name="cep" required>
+                </div>
+                <div class="form-group">
+                    <label for="logradouro">Logradouro</label>
+                    <input type="text" id="logradouro" name="logradouro" required>
+                </div>
+                <div class="form-group">
+                    <label for="numero">Número</label>
+                    <input type="text" id="numero" name="numero" required>
+                </div>
+                <div class="form-group">
+                    <label for="bairro">Bairro</label>
+                    <input type="text" id="bairro" name="bairro" required>
+                </div>
+                <div class="form-group">
+                    <label for="cidade">Cidade</label>
+                    <input type="text" id="cidade" name="cidade" required>
+                </div>
+                <div class="form-group">
+                    <label for="uf">UF</label>
+                    <input type="text" id="uf" name="uf" required maxlength="2">
+                </div>
+                <div class="form-group">
+                    <label for="complemento">Complemento (Opcional)</label>
+                    <input type="text" id="complemento" name="complemento">
+                </div>
+                <p id="endereco-form-error-message" class="error-message"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="save-endereco-button" class="button success">Salvar Endereço</button>
             </div>
         </form>
     </div>

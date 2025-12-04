@@ -18,16 +18,15 @@
             </tr>
         </thead>
         <tbody id="rotas-table-body">
-            <tr>
-                <td colspan="6" style="text-align:center;">Carregando rotas...</td>
-            </tr>
+            <!-- Linhas da tabela serão injetadas aqui -->
         </tbody>
     </table>
 </div>
 
-<!-- Modal para Adicionar/Editar Rota -->
+
+<!-- Modal para Adicionar Rota -->
 <div id="rota-modal-overlay" class="modal-overlay">
-    <div class="modal">
+    <div class="modal large">
         <div class="modal-header">
             <h2 id="modal-title">Planejar Nova Rota</h2>
             <button id="close-modal-button" class="close-button">&times;</button>
@@ -35,47 +34,38 @@
         <form id="rota-form">
             <div class="modal-body">
                 <input type="hidden" id="rota-id">
-                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="veiculoId">Veículo</label>
+                        <select id="veiculoId" name="veiculoId" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="motoristaId">Motorista</label>
+                        <select id="motoristaId" name="motoristaId" required></select>
+                    </div>
+                </div>
                 <div class="form-group">
-                    <label for="dataRota">Data da Rota</label>
-                    <input type="date" id="dataRota" name="dataRota" required>
+                    <label>Pedidos Pendentes para a Rota</label>
+                    <div id="pedidos-checkbox-container" class="checkbox-container"></div>
                 </div>
-                
-                <div class="form-group">
-                    <label for="veiculoId">Veículo</label>
-                    <select id="veiculoId" name="veiculoId" required>
-                        <option value="">Carregando veículos...</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="motoristaId">Motorista</label>
-                    <select id="motoristaId" name="motoristaId" required>
-                        <option value="">Carregando motoristas...</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="pedidosIds">Pedidos Pendentes (segure Ctrl/Cmd para selecionar vários)</label>
-                    <select id="pedidosIds" name="pedidosIds" required multiple style="height: 150px;">
-                        <option value="">Carregando pedidos...</option>
-                    </select>
-                </div>
-
-                 <div class="form-group">
-                    <label for="status">Status</label>
-                    <select id="status" name="status" required>
-                        <option value="Planejada">Planejada</option>
-                        <option value="EmAndamento">Em Andamento</option>
-                        <option value="Concluida">Concluída</option>
-                        <option value="Cancelada">Cancelada</option>
-                    </select>
-                </div>
+                 <p id="form-error-message" class="error-message"></p>
             </div>
             <div class="modal-footer">
-                <button type="button" id="cancel-button" class="button danger">Cancelar</button>
-                <button type="submit" id="save-button" class="button success">Salvar</button>
+                <button type="submit" id="save-button" class="button success">Salvar e Planejar</button>
             </div>
         </form>
+    </div>
+</div>
+
+<!-- Modal para Detalhes da Rota -->
+<div id="rota-details-modal-overlay" class="modal-overlay">
+    <div class="modal large">
+        <div class="modal-header">
+            <h2>Detalhes da Rota</h2>
+            <button id="close-details-modal-button" class="close-button">&times;</button>
+        </div>
+        <div id="rota-details-body" class="modal-body">
+            <!-- Conteúdo dos detalhes será injetado aqui -->
+        </div>
     </div>
 </div>

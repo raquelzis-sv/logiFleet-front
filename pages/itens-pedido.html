@@ -1,27 +1,31 @@
-<!-- Cabeçalho da Página -->
+<!-- pages/itens-pedido.html -->
 <div class="page-header">
-    <h1>Gerenciar Itens de Pedido</h1>
+    <h1>Gestão de Itens de Pedido</h1>
     <button id="add-item-button" class="button">Novo Item</button>
 </div>
 
-<!-- Tabela -->
-<div class="table-container">
-    <table>
+<!-- Tabela de Itens -->
+<div class="list-container">
+    <h2>Itens Disponíveis (sem pedido associado)</h2>
+    <table id="itens-disponiveis-table">
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Descrição</th>
+                <th>Quantidade</th>
                 <th>Peso (Kg)</th>
                 <th>Volume (m³)</th>
                 <th>Código</th>
                 <th>Ações</th>
             </tr>
         </thead>
-        <tbody id="itens-table-body"></tbody>
+        <tbody>
+            <!-- Linhas da tabela serão inseridas via JS -->
+        </tbody>
     </table>
 </div>
 
-<!-- Modal -->
+<!-- Modal para Adicionar/Editar Item -->
 <div id="item-modal-overlay" class="modal-overlay">
     <div class="modal">
         <div class="modal-header">
@@ -32,25 +36,26 @@
             <div class="modal-body">
                 <input type="hidden" id="item-id">
                 <div class="form-group">
-                    <label for="item-descricao">Descrição</label>
-                    <input type="text" id="item-descricao" name="descricao" required>
+                    <label for="descricao">Descrição:</label>
+                    <input type="text" id="descricao" name="descricao" required>
                 </div>
                 <div class="form-group">
-                    <label for="item-peso">Peso (Kg)</label>
-                    <input type="number" id="item-peso" name="pesoUnitarioKg" required min="0" step="0.01">
+                    <label for="quantidade">Quantidade:</label>
+                    <input type="number" id="quantidade" name="quantidade" value="1" required>
                 </div>
                 <div class="form-group">
-                    <label for="item-volume">Volume (m³)</label>
-                    <input type="number" id="item-volume" name="volumeUnitarioM3" required min="0" step="0.01">
+                    <label for="peso">Peso (Kg):</label>
+                    <input type="number" id="peso" name="peso" step="0.01" required>
                 </div>
                 <div class="form-group">
-                    <label for="item-codigo">Código do Produto</label>
-                    <input type="text" id="item-codigo" name="codigoProduto">
+                    <label for="volume">Volume (m³):</label>
+                    <input type="number" id="volume" name="volume" step="0.001" required>
                 </div>
                 <div class="form-group">
-                    <label for="item-quantidade">Quantidade</label>
-                    <input type="number" id="item-quantidade" name="quantidade" required min="1">
+                    <label for="codigo">Código do Produto (Opcional):</label>
+                    <input type="text" id="codigo" name="codigo">
                 </div>
+                <p id="error-message" class="error-message"></p>
             </div>
             <div class="modal-footer">
                 <button type="submit" id="save-button" class="button success">Salvar</button>

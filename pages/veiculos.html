@@ -14,14 +14,18 @@
                 <th>Marca</th>
                 <th>Modelo</th>
                 <th>Ano</th>
+                <th>Capacidade (kg)</th>
                 <th>Capacidade (m³)</th>
+                <th>Status</th>
+                <th>Última Manut.</th>
+                <th>Próxima Manut.</th>
                 <th>Ações</th>
             </tr>
         </thead>
         <tbody id="vehicles-table-body">
             <!-- Linha de exemplo de carregamento -->
             <tr>
-                <td colspan="6" style="text-align:center;">Carregando veículos...</td>
+                <td colspan="10" style="text-align:center;">Carregando veículos...</td>
             </tr>
         </tbody>
     </table>
@@ -41,7 +45,7 @@
                 
                 <div class="form-group">
                     <label for="placa">Placa</label>
-                    <input type="text" id="placa" name="placa" required maxlength="10">
+                    <input type="text" id="placa" name="placa" required maxlength="15">
                 </div>
                 
                 <div class="form-group">
@@ -60,8 +64,33 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="capacidade">Capacidade de Carga (m³)</label>
-                    <input type="number" id="capacidade" name="capacidade" required min="0" step="0.1">
+                    <label for="capacidadeVolume">Capacidade de Volume (m³)</label>
+                    <input type="number" id="capacidadeVolume" name="capacidadeVolume" required min="0" step="0.1">
+                </div>
+
+                <div class="form-group">
+                    <label for="capacidadeCarga">Capacidade de Carga (kg)</label>
+                    <input type="number" id="capacidadeCarga" name="capacidadeCarga" required min="0" step="0.1">
+                </div>
+                
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status" name="status" required>
+                        <option value="0">Disponível</option>
+                        <option value="1">Em Rota</option>
+                        <option value="2">Em Manutenção</option>
+                        <option value="3">Inativo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="dataUltimaManutencao">Data da Última Manutenção</label>
+                    <input type="date" id="dataUltimaManutencao" name="dataUltimaManutencao">
+                </div>
+
+                <div class="form-group">
+                    <label for="dataProximaManutencao">Data da Próxima Manutenção</label>
+                    <input type="date" id="dataProximaManutencao" name="dataProximaManutencao">
                 </div>
             </div>
             <div class="modal-footer">

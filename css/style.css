@@ -266,30 +266,10 @@ table tbody tr:hover {
     flex-direction: column;
 }
 
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 20px;
-    border-bottom: 1px solid var(--cor-borda);
-}
-
-.modal-header h2 {
-    margin: 0;
-    font-size: 1.3rem;
-}
-
-.modal-header .close-button {
-    background: none;
-    border: none;
-    font-size: 1.8rem;
-    cursor: pointer;
-    color: var(--cor-texto-secundario);
-}
-
 .modal-body {
     padding: 20px;
     overflow-y: auto;
+    max-height: calc(90vh - 150px); /* Garante que o corpo do modal tenha uma altura máxima e role */
 }
 
 .modal-footer {
@@ -395,4 +375,122 @@ table tbody tr:hover {
 
 .welcome-panel h2 {
     margin-top: 0;
+}
+
+/* --- MODAL DE DETALHES DA ROTA --- */
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    line-height: 1.6;
+}
+
+.details-section {
+    background-color: var(--cor-fundo);
+    padding: 15px;
+    border-radius: var(--raio-borda);
+}
+
+.details-section h4 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--cor-primaria);
+    border-bottom: 1px solid var(--cor-borda);
+    padding-bottom: 8px;
+}
+
+.details-section.full-width {
+    grid-column: 1 / -1;
+}
+
+.pedido-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.pedido-list li {
+    padding: 10px;
+    border-bottom: 1px solid var(--cor-borda);
+}
+
+.pedido-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.pedido-list small {
+    color: var(--cor-texto-secundario);
+}
+
+/* --- SEÇÃO DE CLIMA --- */
+.weather-info {
+    padding-top: 10px;
+}
+
+.weather-details {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.weather-details img {
+    width: 80px;
+    height: 80px;
+    background-color: #e3f2fd;
+    border-radius: 50%;
+}
+
+.weather-main {
+    flex-grow: 1;
+}
+
+.weather-main p {
+    margin: 0;
+}
+
+.weather-temp {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--cor-primaria);
+}
+
+.weather-desc {
+    text-transform: capitalize;
+    font-size: 1.1rem;
+    margin-bottom: 4px;
+}
+
+.weather-feels {
+    font-size: 0.9rem;
+    color: var(--cor-texto-secundario);
+}
+
+.weather-alert {
+    margin-top: 15px;
+    padding: 10px 15px;
+    border-radius: var(--raio-borda);
+    font-weight: 500;
+    border: 1px solid;
+}
+
+.alert-alta {
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+    color: #721c24;
+}
+
+.alert-media {
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+    color: #856404;
+}
+
+.alert-baixa {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
 }
