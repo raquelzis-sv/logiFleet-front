@@ -17,6 +17,11 @@ const routes = {
         script: 'pages/motoristas.js',
         init: () => window.initMotoristasPage?.()
     },
+    '/pageCliente': {
+        template: 'pages/pageCliente.html',
+        script: 'pages/pageCliente.js',
+        init: () => window.initPageCliente?.()
+    },
     '/veiculos': {
         template: 'pages/veiculos.html',
         script: 'pages/veiculos.js',

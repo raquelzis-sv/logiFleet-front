@@ -25,6 +25,7 @@ export async function login(email, password) {
 export function logout() {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');
+    //localStorage.clear(); vc pode usar esse pra lipar todo o local storage se quiser
     window.location.href = 'login.html'; // Redireciona para a página de login
 }
 

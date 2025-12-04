@@ -22,6 +22,14 @@ function initManutencoesPage() {
     };
 
     let veiculosCache = [];
+    const tipoManutencaoMap = {
+        0: 'Preventiva',
+        1: 'Corretiva'
+    };
+    const tipoManutencaoReverseMap = {
+        'Preventiva': 0,
+        'Corretiva': 1
+    };
 
     async function populateVeiculosDropdown() {
         try {
@@ -42,6 +50,7 @@ function initManutencoesPage() {
             elements.tableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Nenhuma manutenção encontrada.</td></tr>';
             return;
         }
+
         manutencoes.forEach(m => {
             const row = document.createElement('tr');
             row.dataset.id = m.id;
@@ -49,7 +58,7 @@ function initManutencoesPage() {
             row.innerHTML = `
                 <td>${m.id}</td>
                 <td>${veiculo?.placa || 'N/A'}</td>
-                <td>${m.tipo}</td>
+                <td>${tipoManutencaoMap[m.tipo]}</td>
                 <td>${new Date(m.dataInicio).toLocaleDateString()}</td>
                 <td>${m.dataFim ? new Date(m.dataFim).toLocaleDateString() : 'Em andamento'}</td>
                 <td>R$ ${m.custo.toFixed(2)}</td>
@@ -83,7 +92,7 @@ function initManutencoesPage() {
                 elements.modalTitle.textContent = 'Editar Manutenção';
                 elements.manutencaoId.value = manutencao.id;
                 elements.veiculoId.value = manutencao.veiculoId;
-                elements.tipo.value = manutencao.tipo;
+                elements.tipo.value = tipoManutencaoMap[manutencao.tipo];
                 elements.dataInicio.value = manutencao.dataInicio.split('T')[0];
                 elements.dataFim.value = manutencao.dataFim ? manutencao.dataFim.split('T')[0] : '';
                 elements.custo.value = manutencao.custo;
@@ -105,13 +114,14 @@ function initManutencoesPage() {
         const id = parseInt(elements.manutencaoId.value, 10);
         const manutencaoData = {
             veiculoId: parseInt(elements.veiculoId.value),
-            tipo: elements.tipo.value,
+            tipo: tipoManutencaoReverseMap[elements.tipo.value],
             dataInicio: elements.dataInicio.value,
             dataFim: elements.dataFim.value || null,
             custo: parseFloat(elements.custo.value),
             descricao: elements.descricao.value,
             oficinaOuResponsavel: elements.oficinaOuResponsavel.value,
         };
+
 
         elements.saveButton.disabled = true;
         try {
