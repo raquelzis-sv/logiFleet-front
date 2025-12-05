@@ -494,6 +494,24 @@ table tbody tr:hover {
     border-color: #bee5eb;
     color: #0c5460;
 }
+.logotipo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.logotipoindex img{
+
+    width: 1000px;     /* Define uma largura fixa em pixels */
+    /* OU */
+    max-width: 100%;   /* Limita a largura a 50% do tamanho da div pai */
+    height: auto;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+}
 
 /* --- ESTILOS PARA PÁGINA DE CLIENTE E UTILITÁRIOS --- */
 
