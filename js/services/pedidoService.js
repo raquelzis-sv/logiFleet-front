@@ -10,6 +10,10 @@ export async function getPedidosPendentes(options = {}) {
     return await fetchWrapper(`${PEDIDOS_BASE_URL}/pendentes`, options);
 }
 
+export async function getMeusPedidos(options = {}) {
+    return await fetchWrapper(`${PEDIDOS_BASE_URL}/meus-pedidos`, options);
+}
+
 export async function getById(id, options = {}) {
     return await fetchWrapper(`${PEDIDOS_BASE_URL}/${id}`, options);
 }

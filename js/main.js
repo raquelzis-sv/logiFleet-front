@@ -34,10 +34,20 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 3. OBTÉM DADOS DO USUÁRIO
     const user = authService.getUserData();
+
+    // Determina a role do usuário de forma segura
+    let userRole = '';
+    if (user && user.role) {
+        if (typeof user.role === 'object' && user.role !== null && user.role.nome) {
+            userRole = user.role.nome;
+        } else if (typeof user.role === 'string') {
+            userRole = user.role;
+        }
+    }
     
     if (user) {
         // Atualiza o nome de usuário no cabeçalho
-        userNameSpan.textContent = `Olá, ${user.nome} (${user.role})`;
+        userNameSpan.textContent = `Olá, ${user.nome} (${userRole})`;
     }
 
     // 4. LÓGICA DO MENU
@@ -55,19 +65,17 @@ document.addEventListener('DOMContentLoaded', () => {
         { text: 'Dashboard', path: '/', default: true, roles: ['Administrador', 'Motorista', 'Cliente'] },
         { text: 'Clientes', path: '/clientes', roles: ['Administrador'] },
         { text: 'Motoristas', path: '/motoristas', roles: ['Administrador'] },
-        { text: 'paginaCliente', path: '/pageCliente', roles: ['Administrador' , 'Cliente'] },
+        { text: 'Área do Cliente', path: '/pageCliente', roles: ['Cliente'] },
         { text: 'Veiculos', path: '/veiculos', roles: ['Administrador'] },
         { text: 'Rotas', path: '/rotas', roles: ['Administrador', 'Motorista'] },
-        { text: 'Pedidos', path: '/pedidos', roles: ['Administrador', 'Cliente'] },
+        { text: 'Pedidos', path: '/pedidos', roles: ['Administrador'] },
         { text: 'Itens', path: '/itens-pedido', roles: ['Administrador'] },
         { text: 'Manutencoes', path: '/manutencoes', roles: ['Administrador'] },
         { text: 'Usuarios', path: '/usuarios', roles: ['Administrador'] },
         { text: 'Configuracoes', path: '/configuracoes', roles: ['Administrador'] },
         { text: 'Logs', path: '/logs', roles: ['Administrador'] },
     ];
-
-    // Assuming user.role is available and correctly set after login
-    const userRole = user?.role || ''; 
+    
     const filteredMenuItems = menuItems.filter(item => item.roles.includes(userRole));
 
     const renderNav = (items) => {

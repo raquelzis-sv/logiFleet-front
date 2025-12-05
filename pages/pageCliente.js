@@ -1,160 +1,125 @@
-// URL da API de Endereços (o 'clienteId=' será preenchido pelo JavaScript)
-const ENDERECO_API_BASE_URL = 'https://localhost:7188/api/EnderecoClientes';
-
-// --- 1. FUNÇÕES AUXILIARES ---
+import * as pedidoService from '../js/services/pedidoService.js';
 
 /**
- * Simula a lógica de falha de CORS ou SSL com localhost em browsers modernos
- * Ao usar 'localhost' no navegador, é comum que requisições HTTPs (como 7188)
- * para um endereço diferente do domínio atual falhem devido a certificados SSL.
- * Se a busca falhar, esta função trata o erro.
+ * Funções de Renderização (preenchem o HTML com dados)
  */
-function handleApiError(elementId, error) {
-    console.error(`Erro ao buscar dados da API para ${elementId}:`, error);
-    const content = document.getElementById(elementId);
-    content.innerHTML = `
-        <p class="text-red-500 font-bold">Erro ao Conectar à API.</p>
-        <p class="text-xs mt-1">Verifique se a API está rodando e se há problemas de CORS ou HTTPS (certificado). Usando dados mockados para continuar.</p>
-    `;
-    
-    // Retorna dados mockados para continuar a demonstração
-    return [{
-        rua: "Av. Exemplo de Mock",
-        numero: "999",
-        cidade: "Mockland",
-        estado: "MK",
-        cep: "99999-999"
-    }];
-}
 
-async function getById(id, options = {}) {
-    return await fetchWrapper(`${ENDERECO_API_BASE_URL}/${id}`, options);
-}
-
-/**
- * Converte a string JSON de userData (do Local Storage) em um objeto.
- * @returns {object} Objeto de dados do usuário ou objeto vazio.
- */
-function parseUserData() {
-    const userDataString = localStorage.getItem('userData');
-    if (!userDataString) {
-        console.warn("Chave 'userData' não encontrada no Local Storage.");
-        return {};
-    }
-    try {
-        return JSON.parse(userDataString);
-    } catch (e) {
-        console.error("Erro ao fazer o parse do JSON de 'userData':", e);
-        return {};
-    }
-}
-
-// --- 2. FUNÇÕES DE CARREGAMENTO DE DADOS ---
-
-/**
- * Carrega os dados do usuário do Local Storage e preenche o card.
- * @param {object} userData - Objeto de dados do usuário.
- */
-function loadUserData(userData) {
+function renderUserData() {
     const content = document.getElementById('usuario-content');
+    const userDataString = localStorage.getItem('userData');
     
-    const userId = userData.id || 'N/A';
+    if (!userDataString) {
+        content.innerHTML = '<p class="text-red-500">Não foi possível carregar os dados do usuário.</p>';
+        return;
+    }
+
+    const userData = JSON.parse(userDataString);
     const name = userData.nome || 'Usuário Desconhecido';
     const email = userData.email || 'sem.email@exemplo.com';
 
     content.innerHTML = `
         <ul class="space-y-2">
-            <li><span class="font-medium text-gray-800">ID:</span> <span class="font-mono bg-yellow-100 p-1 rounded text-yellow-800">${userId}</span></li>
             <li><span class="font-medium text-gray-800">Nome:</span> ${name}</li>
             <li><span class="font-medium text-gray-800">Email:</span> ${email}</li>
         </ul>
     `;
-    return userId; // Retorna o ID para a próxima busca
 }
 
-/**
- * Busca os endereços na API e preenche o card.
- * @param {string} userId - O ID do cliente a ser usado na API.
- */
-async function loadEnderecoData(userId) {
-    const content = document.getElementById('endereco-content');
-    
-    if (!userId || userId === 'N/A' || userId === 0) {
-        content.innerHTML = '<p class="text-red-500">ID do usuário inválido ou não encontrado. Não é possível buscar o endereço.</p>';
-        return;
-    }
-
-    const apiURL = getById(userId);
-
-    try {
-        const response = await fetch(apiURL);
-        if (!response.ok) {
-            throw new Error(`Status HTTP ${response.status}`);
-        }
-        const enderecos = await response.json();
-
-        if (enderecos && enderecos.length > 0) {
-            // Assume o primeiro endereço da lista para exibição
-            const endereco = enderecos[0]; 
-            content.innerHTML = `
-                <p class="text-gray-800 font-medium">${endereco.rua}, ${endereco.numero}</p>
-                <p>${endereco.cidade} - ${endereco.estado}</p>
-                <p>CEP: ${endereco.cep}</p>
-            `;
-        } else {
-            content.innerHTML = '<p class="text-gray-500">Nenhum endereço de entrega encontrado para este usuário.</p>';
-        }
-
-    } catch (error) {
-        // Se a busca falhar (por ser localhost/CORS/etc.), trata o erro e usa mock.
-        const mockEnderecos = handleApiError('endereco-content', error);
-        const endereco = mockEnderecos[0];
-            content.innerHTML = `
-            <p class="text-gray-800 font-medium">${endereco.rua}, ${endereco.numero} (MOCK)</p>
-            <p>${endereco.cidade} - ${endereco.estado}</p>
-            <p>CEP: ${endereco.cep}</p>
-        `;
-    }
-}
-
-/**
- * Preenche o card de Status do Pedido (com dados mockados, pois não há API para isso).
- */
-function loadStatusAndPedidoData() {
+function renderPedidoData(pedido) {
+    // --- 1. Atualiza o Status ---
     const statusContainer = document.getElementById('status-container');
-    const statusDescricao = document.getElementById('status-descricao');
+    const statusMap = {
+        0: { text: "Pendente", desc: "Seu pedido foi recebido e está aguardando processamento." },
+        1: { text: "Em Rota", desc: "Sua encomenda saiu para entrega." },
+        2: { text: "Entregue", desc: "Seu pedido foi entregue com sucesso!" },
+        3: { text: "Cancelado", desc: "Este pedido foi cancelado." }
+    };
+    const statusInfo = statusMap[pedido.status] || { text: "Desconhecido", desc: "O status do seu pedido é desconhecido." };
     
-    // Dados Mockados de Status
-    const status = "Pedido Enviado";
-    const descricao = "Sua encomenda saiu do centro de distribuição e está a caminho do destino.";
-
-    // Atualiza o Status
-    statusContainer.classList.remove('loading'); // Remove o spinner
     statusContainer.innerHTML = `
-        <h1 class="text-3xl font-bold">${status}</h1>
-        <p id="status-descricao" class="text-lg mt-1 opacity-90">${descricao}</p>
+        <h1 class="text-3xl font-bold">${statusInfo.text}</h1>
+        <p class="text-lg mt-1 opacity-90">${statusInfo.desc}</p>
     `;
 
-    // O conteúdo do Pedido já está em mockup no HTML, mas podemos ajustá-lo aqui se necessário.
-    const pedidoTotal = document.getElementById('pedido-total');
-    if (status.includes("Enviado")) {
-        pedidoTotal.classList.add('text-green-300', 'font-bold');
+    // --- 2. Detalhes do Pedido ---
+    const pedidoContent = document.getElementById('pedido-content');
+    const totalItens = pedido.itensPedido ? pedido.itensPedido.length : 0;
+    
+    pedidoContent.innerHTML = `
+        <ul class="mt-4 space-y-2">
+            <li><span class="font-medium text-gray-800">Nº Pedido:</span> <span class="font-mono bg-gray-100 p-1 rounded">#${pedido.id}</span></li>
+            <li><span class="font-medium text-gray-800">Data do Pedido:</span> ${new Date(pedido.dataCriacao).toLocaleDateString()}</li>
+            <li><span class="font-medium text-gray-800">Itens no Pedido:</span> ${totalItens}</li>
+            <li><span class="font-medium text-gray-800">Peso Total:</span> ${pedido.pesoTotalKg.toFixed(2)} kg</li>
+            <li><span class="font-medium text-gray-800">Volume Total:</span> ${pedido.volumeTotalM3.toFixed(3)} m³</li>
+        </ul>
+    `;
+
+    // --- 3. Endereço de Entrega ---
+    const enderecoContent = document.getElementById('endereco-content');
+    if (pedido.enderecoEntrega) {
+        const endereco = pedido.enderecoEntrega;
+        enderecoContent.innerHTML = `
+            <p class="text-gray-800 font-medium">${endereco.logradouro}, ${endereco.numero}</p>
+            <p>${endereco.cidade} - ${endereco.uf}</p>
+            <p>CEP: ${endereco.cep}</p>
+        `;
+    } else {
+        enderecoContent.innerHTML = '<p class="text-gray-500">Endereço de entrega não especificado.</p>';
     }
 }
 
-// --- 3. INICIALIZAÇÃO ---
-
-async function init() {
-    // 1. Carrega dados do Local Storage (userData)
-    const userData = parseUserData();
-    const userId = loadUserData(userData);
-    
-    // 2. Carrega Status e Pedido (Mock)
-    loadStatusAndPedidoData();
-
-    // 3. Busca Endereço na API (precisa do userId)
-    await loadEnderecoData(userId);
+function renderNoOrders() {
+    document.getElementById('status-container').innerHTML = `
+        <h1 class="text-3xl font-bold">Bem-vindo(a)!</h1>
+        <p class="text-lg mt-1 opacity-90">Você ainda não possui pedidos registrados.</p>
+    `;
+    document.getElementById('pedido-card').style.display = 'none';
+    document.getElementById('endereco-card').style.display = 'none';
 }
 
-// Inicia a aplicação após o carregamento da página
-window.onload = init;
+function renderError(error) {
+    console.error("Erro ao carregar dados da página do cliente:", error);
+    document.getElementById('app').innerHTML = `
+        <div class="card border-red-500 text-center">
+            <h1 class="text-2xl font-bold text-red-600">Ocorreu um Erro</h1>
+            <p class="mt-2">Não foi possível carregar as informações do seu pedido.</p>
+            <p class="text-sm text-gray-500 mt-4">${error.message || 'Tente novamente mais tarde.'}</p>
+        </div>
+    `;
+}
+
+/**
+ * Função de Inicialização da Página do Cliente
+ * Chamada pelo roteador.
+ */
+async function initPageCliente() {
+    try {
+        // Carrega os dados estáticos do usuário
+        renderUserData();
+        
+        // Busca os pedidos do cliente
+        const pedidos = await pedidoService.getMeusPedidos();
+        
+        // Verifica se há pedidos e renderiza o mais recente
+        if (pedidos && pedidos.length > 0) {
+            // A API já retorna ordenado por data de criação descendente
+            const pedidoMaisRecente = pedidos[0]; 
+            renderPedidoData(pedidoMaisRecente);
+        } else {
+            // Caso não haja pedidos
+            renderNoOrders();
+        }
+    } catch (error) {
+        // Trata erros de API ou de renderização
+        renderError(error);
+    }
+
+    // Função de limpeza (opcional, pode ser usada para remover listeners)
+    return () => {
+        console.log("Cleaning up client page resources.");
+    };
+}
+
+// Disponibiliza a função no objeto window para ser chamada pelo roteador
+window.initPageCliente = initPageCliente;

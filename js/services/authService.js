@@ -13,7 +13,13 @@ export async function login(email, password) {
         if (data.token) {
             localStorage.setItem('authToken', data.token);
             localStorage.setItem('userData', JSON.stringify(data.usuario));
-            window.location.href = 'index.html'; // Redireciona para a página principal
+
+            // Role-based redirection
+            if (data.usuario && data.usuario.role && data.usuario.role.nome === 'Cliente') {
+                window.location.href = 'index.html#/pageCliente'; // Redireciona para a página do cliente
+            } else {
+                window.location.href = 'index.html'; // Redireciona para a página principal (admin)
+            }
         }
     } catch (error) {
         console.error('Falha no login:', error);

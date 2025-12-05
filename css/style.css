@@ -494,3 +494,71 @@ table tbody tr:hover {
     border-color: #bee5eb;
     color: #0c5460;
 }
+
+/* --- ESTILOS PARA PÁGINA DE CLIENTE E UTILITÁRIOS --- */
+
+.card {
+    background-color: var(--cor-painel);
+    border-radius: var(--raio-borda);
+    box-shadow: 0 1px 3px var(--cor-sombra);
+    padding: 20px;
+    border-left: 4px solid var(--cor-borda);
+}
+
+.border-green-500 { border-left-color: var(--cor-sucesso); }
+.border-blue-500 { border-left-color: var(--cor-primaria); }
+.border-yellow-500 { border-left-color: var(--cor-aviso); }
+.border-red-500 { border-left-color: var(--cor-erro); }
+
+.max-w-6xl { max-width: 72rem; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+
+.p-4 { padding: 1rem; }
+.p-1 { padding: 0.25rem; }
+.mb-4 { margin-bottom: 1rem; }
+.space-y-6 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 1.5rem;
+}
+.space-y-2 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 0.5rem;
+}
+
+.gap-6 { gap: 1.5rem; }
+
+.grid { display: grid; }
+.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+
+
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.font-mono { font-family: monospace; }
+
+.text-3xl { font-size: 1.875rem; }
+.text-2xl { font-size: 1.5rem; }
+.text-xl { font-size: 1.25rem; }
+.text-lg { font-size: 1.125rem; }
+.text-sm { font-size: 0.875rem; }
+
+.text-gray-400 { color: #9ca3af; }
+.text-gray-500 { color: #6b7280; }
+.text-gray-600 { color: var(--cor-texto-secundario); }
+.text-gray-700 { color: #4b5563; }
+.text-gray-800 { color: var(--cor-texto-principal); }
+.text-red-500 { color: var(--cor-erro); }
+.text-red-600 { color: #dc2626; }
+.text-yellow-800 { color: #856404; }
+
+
+.bg-gray-100 { background-color: #f3f4f6; }
+.bg-yellow-100 { background-color: #fffbeb; }
+
+.rounded { border-radius: var(--raio-borda); }
+
+.opacity-90 { opacity: 0.9; }
+
+@media (min-width: 1024px) {
+    .lg\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .lg\:col-span-1 { grid-column: span 1 / span 1; }
+    .lg\:col-span-2 { grid-column: span 2 / span 2; }
+    .md\:p-8 { padding: 2rem; }
+}

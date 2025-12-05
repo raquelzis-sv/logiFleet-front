@@ -1,13 +1,10 @@
-
 <div class="p-4 md:p-8 min-h-screen">
-
-    
 
     <div id="app" class="max-w-6xl mx-auto space-y-6">
 
         <!-- 1. STATUS DO PEDIDO (TOPO) -->
         <div id="status-container" class="header-status">
-            <h1 class="text-3xl font-bold">Carregando Status... <span class="loading"></span></h1>
+            <h1 class="text-3xl font-bold">Carregando...</h1>
             <p id="status-descricao" class="text-lg mt-1 opacity-90"></p>
         </div>
 
@@ -20,13 +17,7 @@
                 <div id="pedido-card" class="card border-green-500">
                     <h2 class="text-xl font-semibold text-gray-700 mb-4">Detalhes do Pedido</h2>
                     <div id="pedido-content" class="text-sm text-gray-600">
-                        <p class="text-gray-400">Carregando dados do pedido...</p>
-                        <!-- Mockup de dados do Pedido -->
-                        <ul class="mt-4 space-y-2">
-                            <li><span class="font-medium text-gray-800">Nº Pedido:</span> <span id="pedido-numero" class="font-mono bg-gray-100 p-1 rounded">#123456</span></li>
-                            <li><span class="font-medium text-gray-800">Total:</span> <span id="pedido-total">R$ 150,00</span></li>
-                            <li><span class="font-medium text-gray-800">Itens:</span> <span id="pedido-itens">2 itens (Produto A e Produto B)</span></li>
-                        </ul>
+                        <p>Carregando dados do pedido...</p>
                     </div>
                 </div>
 
@@ -34,7 +25,7 @@
                 <div id="endereco-card" class="card border-blue-500">
                     <h2 class="text-xl font-semibold text-gray-700 mb-4">Endereço de Entrega</h2>
                     <div id="endereco-content" class="text-sm text-gray-600">
-                        <p class="text-gray-400">Buscando endereço...</p>
+                        <p>Carregando endereço...</p>
                     </div>
                 </div>
             </div>
@@ -43,9 +34,9 @@
             <div class="lg:col-span-1">
                 <!-- DADOS DO USUÁRIO (DIREITA) -->
                 <div id="usuario-card" class="card border-yellow-500">
-                    <h2 class="text-xl font-semibold text-gray-700 mb-4">Dados do Usuário</h2>
+                    <h2 class="text-xl font-semibold text-gray-700 mb-4">Seus Dados</h2>
                     <div id="usuario-content" class="text-sm text-gray-600">
-                        <p class="text-gray-400">Carregando dados do Local Storage...</p>
+                        <p>Carregando informações...</p>
                     </div>
                 </div>
             </div>
@@ -53,5 +44,3 @@
         </div>
     </div>
 </div>
-    <!-- Link para o arquivo JavaScript externo -->
-    <script type="module" src="pageCliente.js"></script>

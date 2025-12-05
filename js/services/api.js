@@ -1,3 +1,6 @@
+// Arquivo de configuração da API e wrapper de fetch
+
+// Use a URL da sua API. Certifique-se de que o backend está rodando e acessível.
 export const API_BASE_URL = 'https://localhost:7188/api';
 
 // Funções auxiliares para chamadas de API
