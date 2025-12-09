@@ -6,6 +6,10 @@ export async function getAll(options = {}) {
     return await fetchWrapper(USUARIO_BASE_URL, options);
 }
 
+export async function getQuantidade(options = {}) {
+    return fetchWrapper(`${CLIENTES_BASE_URL}/quantidade`, options);
+}
+
 export async function getById(id, options = {}) {
     return await fetchWrapper(`${USUARIO_BASE_URL}/${id}`, options);
 }

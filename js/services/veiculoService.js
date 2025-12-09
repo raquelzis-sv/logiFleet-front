@@ -9,6 +9,10 @@ export async function getAll(options = {}) {
     });
 }
 
+export async function getQuantidade(options = {}) {
+    return fetchWrapper(`${CLIENTES_BASE_URL}/quantidade`, options);
+}
+
 export async function getVeiculosDisponiveis(options = {}) {
     return await fetchWrapper(`${API_BASE_URL}/veiculo/DisponiveisParaRota`, {
         method: 'GET',

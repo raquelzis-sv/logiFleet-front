@@ -25,4 +25,10 @@ const itemPedidoService = {
     }
 };
 
+
+// isso pode dar problema pq esta fora do padrao dos outros mas pode funcionar
+export async function getQuantidade(options = {}) {
+    return fetchWrapper(`${CLIENTES_BASE_URL}/quantidade`, options);
+}
+
 export default itemPedidoService;

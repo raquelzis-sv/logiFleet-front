@@ -6,6 +6,10 @@ export async function getAll(options = {}) {
     return await fetchWrapper(PEDIDOS_BASE_URL, options);
 }
 
+export async function getQuantidade(options = {}) {
+    return fetchWrapper(`${CLIENTES_BASE_URL}/quantidade`, options);
+}
+
 export async function getPedidosPendentes(options = {}) {
     return await fetchWrapper(`${PEDIDOS_BASE_URL}/pendentes`, options);
 }
