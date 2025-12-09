@@ -126,6 +126,7 @@ function initManutencoesPage() {
         elements.saveButton.disabled = true;
         try {
             if (id) {
+                manutencaoData.id = id; // Adiciona o ID apenas na atualização
                 await manutencaoService.update(id, manutencaoData);
             } else {
                 await manutencaoService.create(manutencaoData);

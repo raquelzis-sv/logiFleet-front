@@ -147,6 +147,7 @@ function initVeiculosPage() {
 
         try {
             if (id) {
+                veiculoData.id = id; // Adiciona o ID apenas na atualização
                 await veiculoService.update(id, veiculoData);
             } else {
                 await veiculoService.create(veiculoData);

@@ -22,13 +22,13 @@ export async function fetchWrapper(url, options = {}) {
     });
 
     if (!response.ok) {
+        const errorText = await response.text();
         let errorData;
         try {
-            // Tenta primeiro como JSON, que é o formato mais comum para erros estruturados
-            errorData = await response.json();
-        } catch (jsonError) {
-            // Se falhar, lê como texto. Útil para BadRequests que retornam só uma string.
-            const errorText = await response.text();
+            // Tenta analisar o texto como JSON.
+            errorData = JSON.parse(errorText);
+        } catch (e) {
+            // Se não for JSON, usa a mensagem de texto bruta.
             errorData = { message: errorText || response.statusText };
         }
         throw { status: response.status, data: errorData };
