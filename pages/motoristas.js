@@ -95,6 +95,7 @@ function initMotoristasPage() {
 
         try {
             if (id) {
+                motoristaData.id = id; // Adiciona o ID apenas na atualização
                 await motoristaService.update(id, motoristaData);
             } else {
                 await motoristaService.create(motoristaData);

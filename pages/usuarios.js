@@ -103,10 +103,10 @@ function initUsuariosPage() {
             nome: elements.nome.value,
             email: elements.email.value,
             roleId: parseInt(elements.roleId.value),
-            senha: elements.password.value || null
+            SenhaHash: elements.password.value || null
         };
         
-        if (!id && !usuarioData.senha) {
+        if (!id && !usuarioData.SenhaHash) {
             alert("Senha é obrigatória para criar um novo usuário.");
             return;
         }
@@ -114,6 +114,7 @@ function initUsuariosPage() {
         elements.saveButton.disabled = true;
         try {
             if (id) {
+                usuarioData.id = id; // Adiciona o ID apenas na atualização
                 await usuarioService.update(id, usuarioData);
             } else {
                 await usuarioService.create(usuarioData);

@@ -230,6 +230,20 @@ function initRotasPage() {
         }
     }
     
+    async function handleDelete(id) {
+        if (!confirm(`Tem certeza de que deseja excluir a rota #${id}?`)) return;
+
+        try {
+            await rotaService.remove(id);
+            loadAndRenderRotas(); // Recarrega a tabela
+        } catch (error) {
+            console.error('Erro ao excluir rota:', error);
+            // Usa a mensagem do backend, se disponível
+            const message = error?.data?.message || error?.data || 'Não foi possível excluir a rota. Verifique se ela não está em andamento.';
+            alert(message);
+        }
+    }
+
     // 7. Event Handlers
     function setupEventListeners() {
         elements.addButton.addEventListener('click', showCreateModal);
@@ -238,12 +252,15 @@ function initRotasPage() {
         elements.rotaForm.addEventListener('submit', handleFormSubmit);
 
         elements.tableBody.addEventListener('click', (event) => {
-            if (event.target.classList.contains('details-button')) {
-                handleShowDetails(event.target.dataset.id);
+            const button = event.target.closest('button');
+            if (!button) return;
+
+            const id = button.dataset.id;
+            if (button.classList.contains('details-button')) {
+                handleShowDetails(id);
             }
-            if (event.target.classList.contains('delete-button')) {
-                // A função de delete pode ser implementada aqui se necessário
-                console.log('Delete clicado para o ID:', event.target.dataset.id);
+            if (button.classList.contains('delete-button')) {
+                handleDelete(id);
             }
         });
     }

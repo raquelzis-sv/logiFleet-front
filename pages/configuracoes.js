@@ -83,6 +83,7 @@ function initConfiguracoesPage() {
         elements.saveButton.disabled = true;
         try {
             if (id) {
+                data.id = id; // Adiciona o ID apenas na atualização
                 await configuracaoService.update(id, data);
             } else {
                 await configuracaoService.create(data);

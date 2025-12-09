@@ -125,6 +125,7 @@ function initClientesPage() {
 
         try {
             if (id) {
+                clienteData.id = id; // Adiciona o ID apenas na atualização
                 await clienteService.update(id, clienteData);
             } else {
                 await clienteService.create(clienteData);

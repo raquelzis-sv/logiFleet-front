@@ -24,7 +24,7 @@ export async function login(email, password) {
     } catch (error) {
         console.error('Falha no login:', error);
         // Lança o erro para que a UI possa tratá-lo
-        throw new Error(error.data || 'Não foi possível fazer login. Verifique suas credenciais.');
+        throw new Error(error.data?.message || 'Não foi possível fazer login. Verifique suas credenciais.');
     }
 }
 
