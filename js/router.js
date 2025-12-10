@@ -1,3 +1,5 @@
+import { isAuthenticated } from './services/authService.js';
+
 // Roteador dinâmico que carrega HTML e JS sob demanda
 
 // Mapeamento de rotas para templates e scripts
@@ -94,6 +96,12 @@ function loadScript(src) {
  * Função principal do roteador.
  */
 const router = async () => {
+    // Guarda de Autenticação: verifica se o usuário está logado.
+    if (!isAuthenticated()) {
+        window.location.href = 'login.html'; // Redireciona para o login se não estiver autenticado
+        return;
+    }
+
     // 1. Limpa recursos da página anterior
     if (typeof currentPageDestroy === 'function') {
         currentPageDestroy();

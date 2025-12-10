@@ -17,12 +17,6 @@ const ICON_MAP = {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. VERIFICA AUTENTICAÇÃO
-    if (!authService.isAuthenticated()) {
-        window.location.href = 'login.html';
-        return;
-    }
-
     // 2. ELEMENTOS DO DOM
     const appContainer = document.getElementById('app-container');
     const menuToggle = document.getElementById('menu-toggle');
@@ -62,7 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 5. CONSTRUÇÃO DA NAVEGAÇÃO
     const menuItems = [
-        { text: 'Dashboard', path: '/', default: true, roles: ['Administrador', 'Motorista', 'Cliente'] },
+        { text: 'Dashboard', path: '/', default: true, roles: ['Administrador'] },
         { text: 'Clientes', path: '/clientes', roles: ['Administrador'] },
         { text: 'Motoristas', path: '/motoristas', roles: ['Administrador'] },
         { text: 'Área do Cliente', path: '/pageCliente', roles: ['Cliente'] },

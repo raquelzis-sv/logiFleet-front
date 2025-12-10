@@ -29,10 +29,10 @@ function renderPedidoData(pedido) {
     // --- 1. Atualiza o Status ---
     const statusContainer = document.getElementById('status-container');
     const statusMap = {
-        0: { text: "Pendente", desc: "Seu pedido foi recebido e está aguardando processamento." },
-        1: { text: "Em Rota", desc: "Sua encomenda saiu para entrega." },
-        2: { text: "Entregue", desc: "Seu pedido foi entregue com sucesso!" },
-        3: { text: "Cancelado", desc: "Este pedido foi cancelado." }
+        "Pendente": { text: "Pendente", desc: "Seu pedido foi recebido e está aguardando processamento." },
+        "EmRota":   { text: "Em Rota", desc: "Sua encomenda saiu para entrega." },
+        "Entregue": { text: "Entregue", desc: "Seu pedido foi entregue com sucesso!" },
+        "Cancelado":{ text: "Cancelado", desc: "Este pedido foi cancelado." }
     };
     const statusInfo = statusMap[pedido.status] || { text: "Desconhecido", desc: "O status do seu pedido é desconhecido." };
     
