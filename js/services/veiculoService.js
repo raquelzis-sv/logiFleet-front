@@ -10,7 +10,10 @@ export async function getAll(options = {}) {
 }
 
 export async function getQuantidade(options = {}) {
-    return fetchWrapper(`${CLIENTES_BASE_URL}/quantidade`, options);
+    return fetchWrapper(`${CLIENTES_BASE_URL}/quantidade`,{
+        method: 'GET',
+        ...options
+    });
 }
 
 export async function getVeiculosDisponiveis(options = {}) {
