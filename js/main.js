@@ -13,7 +13,7 @@ const ICON_MAP = {
     '/manutencoes': 'build',
     '/usuarios': 'manage_accounts',
     '/configuracoes': 'settings',
-    '/logs': 'format_list_bulleted',
+    // '/logs': 'format_list_bulleted',
 };
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -67,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { text: 'Manutencoes', path: '/manutencoes', roles: ['Administrador'] },
         { text: 'Usuarios', path: '/usuarios', roles: ['Administrador'] },
         { text: 'Configuracoes', path: '/configuracoes', roles: ['Administrador'] },
-        { text: 'Logs', path: '/logs', roles: ['Administrador'] },
+        // { text: 'Logs', path: '/logs', roles: ['Administrador'] },
     ];
     
     const filteredMenuItems = menuItems.filter(item => item.roles.includes(userRole));
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const linkEl = document.createElement('a');
             
             // Define a URL baseada na rota (usando hash para simular rotas)
-            linkEl.href = item.path === '/' ? '#' : `#${item.path}`;
+            linkEl.href = `#${item.path}`;
             
             // Aplica a classe CSS para o link de navegação
             linkEl.className = 'nav-link';

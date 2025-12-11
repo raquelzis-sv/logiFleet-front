@@ -42,16 +42,24 @@ function initVeiculosPage() {
         return new Date(dataString).toISOString().split('T')[0];
     }
     
-    /** Mapeia o enum de Status para uma string legível */
-    function getStatusText(statusEnum) {
+    /** Mapeia o enum de Status (string) para uma string legível */
+    function getStatusText(statusString) {
         const statusMap = {
-            0: 'Disponível',
-            1: 'Em Rota',
-            2: 'Em Manutenção',
-            3: 'Inativo'
+            'Disponivel': 'Disponível',
+            'EmRota': 'Em Rota',
+            'EmManutencao': 'Em Manutenção',
+            'Inativo': 'Inativo'
         };
-        return statusMap[statusEnum] || 'Desconhecido';
+        return statusMap[statusString] || 'Desconhecido';
     }
+
+    /** Mapeia a string do status vinda da API para o valor numérico do <select> */
+    const statusStringToValue = {
+        'Disponivel': 0,
+        'EmRota': 1,
+        'EmManutencao': 2,
+        'Inativo': 3
+    };
 
 
     // --- FUNÇÕES PRINCIPAIS ---
@@ -111,7 +119,7 @@ function initVeiculosPage() {
             elements.ano.value = veiculo.anoFabricacao;
             elements.capacidadeVolume.value = veiculo.capacidadeVolume;
             elements.capacidadeCarga.value = veiculo.capacidadeCarga;
-            elements.status.value = veiculo.status;
+            elements.status.value = statusStringToValue[veiculo.status];
             elements.dataUltimaManutencao.value = formatarDataParaInput(veiculo.dataUltimaManutencao);
             elements.dataProximaManutencao.value = formatarDataParaInput(veiculo.dataProximaManutencao);
         } else {

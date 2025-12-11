@@ -7,7 +7,8 @@ export async function getAll(options = {}) {
 }
 
 export async function getQuantidade(options = {}) {
-    return fetchWrapper(`${CLIENTES_BASE_URL}/quantidade`, options);
+    const manutencoes = await getAll(options);
+    return manutencoes.length;
 }
 
 export async function getById(id, options = {}) {

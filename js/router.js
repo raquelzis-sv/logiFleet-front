@@ -1,4 +1,4 @@
-import { isAuthenticated } from './services/authService.js';
+import { isAuthenticated, getUserData } from './services/authService.js';
 
 // Roteador dinâmico que carrega HTML e JS sob demanda
 
@@ -54,11 +54,11 @@ const routes = {
         script: 'pages/usuarios.js',
         init: () => window.initUsuariosPage?.()
     },
-    '/logs': {
-        template: 'pages/logs.html',
-        script: 'pages/logs.js',
-        init: () => window.initLogsPage?.()
-    },
+    // '/logs': {
+    //     template: 'pages/logs.html',
+    //     script: 'pages/logs.js',
+    //     init: () => window.initLogsPage?.()
+    // },
     '/configuracoes': {
         template: 'pages/configuracoes.html',
         script: 'pages/configuracoes.js',
@@ -109,9 +109,21 @@ const router = async () => {
     }
 
     // 2. Resolve a rota atual
-    const path = window.location.hash.slice(1) || '/';
-    const route = routes[path];
+    let path = window.location.hash.slice(1) || '/';
     const mainContent = document.getElementById('main-content');
+    
+    // GUARDA DE ROTA ESPECIAL PARA CLIENTE
+    const user = getUserData();
+    const userRole = user?.role?.nome || user?.role;
+
+    if (userRole === 'Cliente' && path === '/') {
+        path = '/pageCliente';
+        // Usa replaceState para evitar adicionar ao histórico de navegação
+        history.replaceState(null, '', `#${path}`);
+    }
+
+    const route = routes[path];
+
 
     if (!route || !mainContent) {
         mainContent.innerHTML = '<h1>404 - Página Não Encontrada</h1>';
@@ -131,7 +143,7 @@ const router = async () => {
 
         // 5. Executa a função de inicialização da página
         if (route.init && typeof route.init === 'function') {
-            const destroyFn = route.init();
+            const destroyFn = await route.init(); // Tornando a chamada `await`
             if (typeof destroyFn === 'function') {
                 currentPageDestroy = destroyFn;
             }
@@ -152,10 +164,12 @@ const router = async () => {
  */
 function updateNavLinks(path) {
     document.querySelectorAll('#main-nav a').forEach(link => {
-        const linkPath = link.hash.slice(1) || '/';
+        // Ajusta para tratar tanto `#/` quanto `#` como a rota raiz.
+        const linkPath = link.getAttribute('href').slice(1) || '/';
         link.classList.toggle('active', linkPath === path);
     });
 }
+
 
 // Adiciona os listeners para o roteamento
 window.addEventListener('hashchange', router);

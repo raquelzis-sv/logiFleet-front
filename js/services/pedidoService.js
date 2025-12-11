@@ -7,7 +7,8 @@ export async function getAll(options = {}) {
 }
 
 export async function getQuantidade(options = {}) {
-    return fetchWrapper(`${CLIENTES_BASE_URL}/quantidade`, options);
+    const pedidos = await getAll(options);
+    return pedidos.length;
 }
 
 export async function getPedidosPendentes(options = {}) {
